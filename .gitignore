@@ -1,0 +1,20 @@
+# Dépendances
+node_modules/
+
+# Build du launcher
+dist/
+out/
+
+# Staging local des mods (ne pas committer les .jar des mods ici)
+build-modpack/mods/*.jar
+
+# Logs / divers
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Configs locales d'éditeur / outils
+.vscode/
+.idea/
+.claude/settings.local.json

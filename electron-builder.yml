@@ -1,0 +1,33 @@
+appId: com.proto.launchercustommc
+productName: Launcher Custom MC
+copyright: Copyright © 2026 Proto
+
+directories:
+  output: dist
+  buildResources: build
+
+# Fichiers inclus dans l'application packagée.
+# electron-builder ajoute automatiquement les dépendances de production (node_modules).
+files:
+  - "src/**/*"
+  - "package.json"
+  - "!**/*.map"
+
+# Icône optionnelle : déposez build/icon.ico (256x256) puis décommentez la ligne.
+win:
+  target:
+    - nsis
+  # icon: build/icon.ico
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Launcher Custom MC
+
+# La cible de publication (owner/repo) est déduite du champ "repository"
+# de package.json. C'est ce qui alimente aussi l'auto-update (electron-updater).
+publish:
+  provider: github

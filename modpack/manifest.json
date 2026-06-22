@@ -1,0 +1,13 @@
+{
+  "name": "Mon Serveur Moddé",
+  "minecraft": "1.20.1",
+  "forge": {
+    "version": "47.3.0",
+    "installerUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.3.0/forge-1.20.1-47.3.0-installer.jar"
+  },
+  "server": {
+    "ip": "play.exemple.fr",
+    "port": 25565
+  },
+  "mods": []
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' https://minotar.net data:; style-src 'self' 'unsafe-inline';" />
+  <title>Launcher Custom MC</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Barre de titre personnalisée (fenêtre sans cadre) -->
+  <header class="titlebar">
+    <div class="titlebar__title">Launcher Custom MC</div>
+    <div class="titlebar__controls">
+      <button id="btn-min" class="winbtn" title="Réduire">&#x2013;</button>
+      <button id="btn-close" class="winbtn winbtn--close" title="Fermer">&#x2715;</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <!-- Bandeau serveur -->
+    <section class="hero">
+      <h1 id="server-name">Mon Serveur Moddé</h1>
+      <div class="chips">
+        <span class="chip" id="chip-mc">Minecraft —</span>
+        <span class="chip" id="chip-forge">Forge —</span>
+        <span class="chip" id="chip-mods">— mods</span>
+      </div>
+      <p class="hero__server" id="server-address"></p>
+    </section>
+
+    <!-- Compte -->
+    <section class="account" id="account">
+      <div class="account__info">
+        <img id="avatar" class="avatar" alt="" width="48" height="48" />
+        <div>
+          <div class="account__label">Compte</div>
+          <div class="account__name" id="account-name">Non connecté</div>
+        </div>
+      </div>
+      <button id="btn-account" class="btn btn--ghost">Se connecter</button>
+    </section>
+
+    <!-- Zone de lancement -->
+    <section class="play">
+      <div class="progress" id="progress-wrap">
+        <div class="progress__bar" id="progress-bar"></div>
+      </div>
+      <div class="status" id="status">Prêt.</div>
+      <div class="play__actions">
+        <button id="btn-settings" class="btn btn--ghost" title="Paramètres">&#9881;</button>
+        <button id="btn-play" class="btn btn--primary" disabled>JOUER</button>
+        <button id="btn-logs" class="btn btn--ghost" title="Journal">&#9776;</button>
+      </div>
+    </section>
+
+    <!-- Journal (console) -->
+    <pre id="logs" class="logs hidden"></pre>
+  </main>
+
+  <!-- Bandeau de mise à jour -->
+  <div id="update-toast" class="toast hidden">
+    <span id="update-text"></span>
+    <button id="btn-update" class="btn btn--primary hidden">Redémarrer</button>
+  </div>
+
+  <!-- Modale paramètres -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal__box">
+      <h2>Paramètres</h2>
+
+      <label class="field">
+        <span>Mémoire allouée : <strong id="ram-value">4096</strong> Mo</span>
+        <input type="range" id="ram-max" min="2048" max="16384" step="512" value="4096" />
+      </label>
+
+      <label class="field">
+        <span>Chemin Java (vide = automatique)</span>
+        <input type="text" id="java-path" placeholder="C:\\Program Files\\Eclipse Adoptium\\...\\bin\\javaw.exe" />
+      </label>
+
+      <label class="field field--row">
+        <input type="checkbox" id="keep-open" />
+        <span>Garder le launcher ouvert pendant le jeu</span>
+      </label>
+
+      <div class="modal__actions">
+        <button id="btn-settings-cancel" class="btn btn--ghost">Annuler</button>
+        <button id="btn-settings-save" class="btn btn--primary">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

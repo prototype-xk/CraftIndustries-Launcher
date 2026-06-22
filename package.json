@@ -1,0 +1,36 @@
+{
+  "name": "launcher-custom-mc",
+  "version": "1.0.0",
+  "description": "Launcher custom pour un serveur Minecraft moddé (Forge) avec authentification Microsoft et mises à jour via GitHub.",
+  "main": "src/main/main.js",
+  "author": "Proto",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VOTRE_PSEUDO_GITHUB/launcher-custom-mc.git"
+  },
+  "launcher": {
+    "branch": "main",
+    "serverName": "Mon Serveur Moddé",
+    "minecraft": "1.20.1",
+    "forge": "47.3.0",
+    "serverIp": "play.exemple.fr",
+    "serverPort": 25565
+  },
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "dist": "electron-builder",
+    "publish": "electron-builder --publish always",
+    "make-manifest": "node scripts/generate-manifest.js"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9",
+    "minecraft-launcher-core": "^3.18.2",
+    "msmc": "^5.0.5"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^26.0.0"
+  }
+}

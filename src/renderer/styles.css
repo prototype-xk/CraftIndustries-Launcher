@@ -1,0 +1,150 @@
+:root {
+  --bg: #0f1115;
+  --bg-elev: #171a21;
+  --bg-elev-2: #1f232c;
+  --border: #2a2f3a;
+  --text: #e7eaf0;
+  --text-dim: #9aa3b2;
+  --accent: #3ddc84;       /* vert "Minecraft" */
+  --accent-hover: #34c476;
+  --danger: #e5534b;
+  --radius: 10px;
+  --font: "Segoe UI", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  color: var(--text);
+  background:
+    radial-gradient(1200px 500px at 50% -10%, #1b2530 0%, transparent 60%),
+    var(--bg);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ---------- Barre de titre ---------- */
+.titlebar {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px 0 14px;
+  background: rgba(0, 0, 0, 0.25);
+  -webkit-app-region: drag;
+  border-bottom: 1px solid var(--border);
+}
+.titlebar__title { font-size: 12px; color: var(--text-dim); letter-spacing: .4px; }
+.titlebar__controls { -webkit-app-region: no-drag; display: flex; gap: 2px; }
+.winbtn {
+  width: 38px; height: 28px; border: 0; border-radius: 6px;
+  background: transparent; color: var(--text-dim); cursor: pointer; font-size: 13px;
+}
+.winbtn:hover { background: var(--bg-elev-2); color: var(--text); }
+.winbtn--close:hover { background: var(--danger); color: #fff; }
+
+/* ---------- Layout ---------- */
+.app {
+  height: calc(100% - 36px);
+  display: flex;
+  flex-direction: column;
+  padding: 26px 32px 22px;
+  gap: 18px;
+}
+
+.hero { margin-top: 6px; }
+.hero h1 { font-size: 30px; font-weight: 700; letter-spacing: .3px; }
+.hero__server { color: var(--text-dim); font-size: 13px; margin-top: 8px; }
+.chips { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.chip {
+  font-size: 12px; color: var(--text-dim);
+  background: var(--bg-elev); border: 1px solid var(--border);
+  padding: 5px 10px; border-radius: 999px;
+}
+
+/* ---------- Compte ---------- */
+.account {
+  margin-top: auto;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 14px;
+}
+.account__info { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  border-radius: 8px; background: var(--bg-elev-2);
+  image-rendering: pixelated; display: block;
+}
+.account__label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; }
+.account__name { font-size: 15px; font-weight: 600; }
+
+/* ---------- Zone de jeu ---------- */
+.play { display: flex; flex-direction: column; gap: 12px; }
+.progress {
+  height: 8px; border-radius: 999px; background: var(--bg-elev-2);
+  overflow: hidden; border: 1px solid var(--border);
+}
+.progress__bar {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--accent), #6ef0a8);
+  transition: width .2s ease;
+}
+.status { font-size: 13px; color: var(--text-dim); min-height: 18px; }
+
+.play__actions { display: flex; align-items: center; gap: 10px; }
+.play__actions #btn-play { flex: 1; }
+
+/* ---------- Boutons ---------- */
+.btn {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg-elev); color: var(--text);
+  padding: 12px 18px; font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: background .15s ease, transform .05s ease, opacity .15s ease;
+}
+.btn:hover { background: var(--bg-elev-2); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn--ghost { padding: 12px 14px; }
+.btn--primary {
+  background: var(--accent); color: #08160d; border-color: transparent;
+  font-size: 16px; letter-spacing: 1px; padding: 14px;
+}
+.btn--primary:hover { background: var(--accent-hover); }
+
+/* ---------- Journal ---------- */
+.logs {
+  background: #0a0c10; border: 1px solid var(--border); border-radius: var(--radius);
+  font-family: "Cascadia Code", Consolas, monospace; font-size: 11px; color: #aeb6c2;
+  padding: 10px; height: 150px; overflow-y: auto; white-space: pre-wrap; user-select: text;
+}
+
+/* ---------- Toast MAJ ---------- */
+.toast {
+  position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+  background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 999px;
+  padding: 8px 14px; display: flex; align-items: center; gap: 12px; font-size: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .4);
+}
+.toast .btn { padding: 6px 12px; font-size: 12px; }
+
+/* ---------- Modale ---------- */
+.modal {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, .55);
+  display: flex; align-items: center; justify-content: center;
+}
+.modal__box {
+  width: 440px; background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; gap: 16px;
+}
+.modal__box h2 { font-size: 18px; }
+.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-dim); }
+.field--row { flex-direction: row; align-items: center; gap: 8px; }
+.field input[type="text"] {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 10px; color: var(--text); font-size: 12px; font-family: var(--font);
+}
+.field input[type="range"] { accent-color: var(--accent); }
+.modal__actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+.hidden { display: none !important; }
