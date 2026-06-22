@@ -82,7 +82,7 @@ function setAccount(profile) {
     el.acctAvatar.src = `https://minotar.net/helm/${encodeURIComponent(profile.name)}/64.png`;
     el.btnAccount.textContent = 'Quitter';
     el.btnAccount.classList.add('account__btn--ghost');
-    el.heroAvatar.src = `https://minotar.net/armor/body/${encodeURIComponent(profile.name)}/360.png`;
+    el.heroAvatar.src = `https://minotar.net/armor/bust/${encodeURIComponent(profile.name)}/400.png`;
     el.heroAvatar.onload = () => el.heroAvatar.classList.add('is-shown');
   } else {
     el.acctName.textContent = 'Non connecté';
@@ -280,8 +280,52 @@ api.onUpdate((u) => {
 });
 $('btn-update').addEventListener('click', () => api.installUpdate());
 
+/* ---------- Particules animées (hero) ---------- */
+function initParticles() {
+  const canvas = $('hero-particles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w = 0, h = 0, particles = [];
+  const make = () => ({
+    x: Math.random() * w, y: Math.random() * h,
+    r: Math.random() * 1.6 + 0.4,
+    vy: -(Math.random() * 0.25 + 0.07),
+    vx: (Math.random() - 0.5) * 0.12,
+    a: Math.random() * 0.5 + 0.18
+  });
+  function build() {
+    const rect = canvas.getBoundingClientRect();
+    w = canvas.width = Math.max(1, Math.floor(rect.width));
+    h = canvas.height = Math.max(1, Math.floor(rect.height));
+    const count = Math.min(90, Math.max(34, Math.round(w / 15)));
+    particles = Array.from({ length: count }, make);
+  }
+  let phase = 0;
+  function frame() {
+    ctx.clearRect(0, 0, w, h);
+    phase += 0.02;
+    ctx.shadowColor = 'rgba(41,198,232,0.8)';
+    ctx.shadowBlur = 6;
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.y < -6) { p.y = h + 6; p.x = Math.random() * w; }
+      if (p.x < -6) p.x = w + 6; else if (p.x > w + 6) p.x = -6;
+      const alpha = p.a * (0.6 + 0.4 * Math.sin(phase + p.x * 0.05));
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(41,198,232,' + Math.max(0, alpha).toFixed(3) + ')';
+      ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  build();
+  window.addEventListener('resize', build);
+  requestAnimationFrame(frame);
+}
+
 /* ---------- Démarrage ---------- */
 (async function init() {
+  initParticles();
   try {
     const info = await api.appInfo();
     el.aboutVersion.textContent = `CraftIndustries Launcher v${info.version}`;

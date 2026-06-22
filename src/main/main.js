@@ -46,10 +46,10 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1100,
     height: 700,
-    minWidth: 1000,
-    minHeight: 640,
+    resizable: false,
     frame: false,
-    backgroundColor: '#0d0f14',
+    transparent: true, // coins arrondis dessinés en CSS
+    icon: path.join(__dirname, '..', '..', 'build', 'icon.png'),
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

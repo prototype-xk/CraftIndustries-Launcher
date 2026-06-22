@@ -11,6 +11,7 @@ directories:
 files:
   - "src/**/*"
   - "package.json"
+  - "build/icon.png"
   - "!**/*.map"
 
 # ===================== Windows =====================
