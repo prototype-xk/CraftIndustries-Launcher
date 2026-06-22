@@ -7,25 +7,28 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+  // Infos appli
+  appInfo: () => ipcRenderer.invoke('app:info'),
+
   // Authentification
   login: () => ipcRenderer.invoke('auth:login'),
   loginSilent: () => ipcRenderer.invoke('auth:loginSilent'),
   logout: () => ipcRenderer.invoke('auth:logout'),
 
-  // Modpack / lancement
+  // Modpack / serveur / lancement
   getModpackInfo: () => ipcRenderer.invoke('modpack:info'),
+  pingServer: (ip, port) => ipcRenderer.invoke('server:ping', { ip, port }),
   play: () => ipcRenderer.invoke('game:play'),
 
   // Paramètres
   getSettings: () => ipcRenderer.invoke('settings:get'),
   saveSettings: (s) => ipcRenderer.invoke('settings:set', s),
 
-  // Contrôles fenêtre
+  // Actions système
   minimize: () => ipcRenderer.send('win:minimize'),
   close: () => ipcRenderer.send('win:close'),
   openExternal: (url) => ipcRenderer.send('open:external', url),
-
-  // Mises à jour du launcher
+  openGameDir: () => ipcRenderer.send('open:gameDir'),
   installUpdate: () => ipcRenderer.send('update:install'),
 
   // Événements (push depuis le main)

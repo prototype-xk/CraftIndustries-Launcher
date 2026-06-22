@@ -4,91 +4,194 @@
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; img-src 'self' https://minotar.net data:; style-src 'self' 'unsafe-inline';" />
-  <title>Launcher Custom MC</title>
+  <title>CraftIndustries Launcher</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Barre de titre personnalisée (fenêtre sans cadre) -->
+  <!-- ===== Barre de titre ===== -->
   <header class="titlebar">
-    <div class="titlebar__title">Launcher Custom MC</div>
+    <div class="titlebar__brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3 6.5 3.6L12 11.5 5.5 7.9 12 4.3ZM5 9.6l6 3.4v6.8l-6-3.3V9.6Zm14 0v6.9l-6 3.3v-6.8l6-3.4Z" fill="currentColor"/></svg>
+      </span>
+      <span class="titlebar__name">CraftIndustries <span class="titlebar__sub">Launcher</span></span>
+    </div>
     <div class="titlebar__controls">
-      <button id="btn-min" class="winbtn" title="Réduire">&#x2013;</button>
-      <button id="btn-close" class="winbtn winbtn--close" title="Fermer">&#x2715;</button>
+      <button id="btn-min" class="winbtn" title="Réduire" aria-label="Réduire">
+        <svg viewBox="0 0 12 12" width="11" height="11"><rect x="2" y="5.4" width="8" height="1.2" fill="currentColor"/></svg>
+      </button>
+      <button id="btn-close" class="winbtn winbtn--close" title="Fermer" aria-label="Fermer">
+        <svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </button>
     </div>
   </header>
 
-  <main class="app">
-    <!-- Bandeau serveur -->
-    <section class="hero">
-      <h1 id="server-name">CraftIndustries</h1>
-      <div class="chips">
-        <span class="chip" id="chip-mc">Minecraft —</span>
-        <span class="chip" id="chip-forge">Forge —</span>
-        <span class="chip" id="chip-mods">— mods</span>
-      </div>
-      <p class="hero__server" id="server-address"></p>
-    </section>
+  <div class="shell">
+    <!-- ===== Barre latérale ===== -->
+    <aside class="sidebar">
+      <nav class="nav">
+        <button class="nav__item nav__item--active" data-view="home">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 11.5 12 4l9 7.5M5 10v9h5v-5h4v5h5v-9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <span>Accueil</span>
+        </button>
+        <button class="nav__item" data-view="mods">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 7l8-4 8 4-8 4-8-4Zm0 5 8 4 8-4M4 17l8 4 8-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <span>Mods</span>
+        </button>
+        <button class="nav__item" data-view="settings">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13a7.6 7.6 0 0 0 0-2l1.8-1.4-2-3.4-2.1.9a7.5 7.5 0 0 0-1.7-1l-.3-2.3H9.9l-.3 2.3a7.5 7.5 0 0 0-1.7 1l-2.1-.9-2 3.4L5.6 11a7.6 7.6 0 0 0 0 2l-1.8 1.4 2 3.4 2.1-.9a7.5 7.5 0 0 0 1.7 1l.3 2.3h4.2l.3-2.3a7.5 7.5 0 0 0 1.7-1l2.1.9 2-3.4L19.4 13Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          <span>Paramètres</span>
+        </button>
+      </nav>
 
-    <!-- Compte -->
-    <section class="account" id="account">
-      <div class="account__info">
-        <img id="avatar" class="avatar" alt="" width="48" height="48" />
-        <div>
-          <div class="account__label">Compte</div>
-          <div class="account__name" id="account-name">Non connecté</div>
+      <!-- Carte compte -->
+      <div class="account" id="account">
+        <div class="account__top">
+          <img id="acct-avatar" class="account__avatar" alt="" />
+          <div class="account__meta">
+            <div class="account__name" id="acct-name">Non connecté</div>
+            <div class="account__state" id="acct-state">Hors ligne</div>
+          </div>
         </div>
+        <button id="btn-account" class="account__btn" title="Se connecter">Connexion</button>
       </div>
-      <button id="btn-account" class="btn btn--ghost">Se connecter</button>
-    </section>
+    </aside>
 
-    <!-- Zone de lancement -->
-    <section class="play">
-      <div class="progress" id="progress-wrap">
-        <div class="progress__bar" id="progress-bar"></div>
-      </div>
-      <div class="status" id="status">Prêt.</div>
-      <div class="play__actions">
-        <button id="btn-settings" class="btn btn--ghost" title="Paramètres">&#9881;</button>
-        <button id="btn-play" class="btn btn--primary" disabled>JOUER</button>
-        <button id="btn-logs" class="btn btn--ghost" title="Journal">&#9776;</button>
-      </div>
-    </section>
+    <!-- ===== Contenu ===== -->
+    <main class="content">
+      <!-- ---- Vue Accueil ---- -->
+      <section class="view view--active" id="view-home">
+        <div class="hero">
+          <div class="hero__bg"></div>
+          <div class="hero__grid"></div>
+          <div class="hero__inner">
+            <div class="hero__text">
+              <div class="hero__eyebrow">
+                <span class="dot" id="srv-dot"></span>
+                <span id="srv-state">Serveur moddé</span>
+              </div>
+              <h1 class="hero__title" id="home-title">CraftIndustries</h1>
+              <div class="chips">
+                <span class="chip" id="chip-mc"><span class="chip__k">Minecraft</span><span class="chip__v">—</span></span>
+                <span class="chip" id="chip-forge"><span class="chip__k">Forge</span><span class="chip__v">—</span></span>
+                <span class="chip" id="chip-mods"><span class="chip__k">Mods</span><span class="chip__v">—</span></span>
+              </div>
+              <div class="hero__server" id="home-server">Adresse du serveur : —</div>
+            </div>
+            <div class="hero__player">
+              <img id="hero-avatar" class="hero__avatar" alt="" />
+            </div>
+          </div>
+        </div>
 
-    <!-- Journal (console) -->
-    <pre id="logs" class="logs hidden"></pre>
-  </main>
+        <!-- Barre de lancement -->
+        <div class="launchbar">
+          <button id="btn-console" class="iconbtn" title="Console">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 5h14v14H5zM8 10l3 2-3 2m5 0h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="launchbar__info">
+            <div class="launchbar__status" id="status">Prêt.</div>
+            <div class="progress"><div class="progress__bar" id="progress-bar"></div></div>
+          </div>
+          <button id="btn-play" class="btn-play" disabled>
+            <span class="btn-play__label">JOUER</span>
+            <span class="btn-play__sub" id="btn-play-sub">Connecte-toi d'abord</span>
+          </button>
+        </div>
+
+        <!-- Console -->
+        <div class="console hidden" id="console">
+          <div class="console__head">
+            <span>Console</span>
+            <button id="btn-console-clear" class="link">Vider</button>
+          </div>
+          <pre class="console__body" id="console-body"></pre>
+        </div>
+      </section>
+
+      <!-- ---- Vue Mods ---- -->
+      <section class="view" id="view-mods">
+        <div class="page">
+          <div class="page__head">
+            <div>
+              <h2 class="page__title">Mods du modpack</h2>
+              <p class="page__sub" id="mods-sub">Liste synchronisée depuis GitHub</p>
+            </div>
+            <span class="badge" id="mods-count">0 mods</span>
+          </div>
+          <div class="modlist" id="mods-list"></div>
+          <div class="empty" id="mods-empty">
+            <svg viewBox="0 0 24 24" width="42" height="42"><path d="M4 7l8-4 8 4-8 4-8-4Zm0 5 8 4 8-4M4 17l8 4 8-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+            <p>Aucun mod dans le manifeste pour l'instant.</p>
+            <span>Ajoute des <code>.jar</code> puis publie le manifeste sur GitHub.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---- Vue Paramètres ---- -->
+      <section class="view" id="view-settings">
+        <div class="page">
+          <div class="page__head">
+            <div>
+              <h2 class="page__title">Paramètres</h2>
+              <p class="page__sub">Configuration du jeu et du launcher</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__row card__row--col">
+              <div class="field__top">
+                <label for="set-ram">Mémoire allouée</label>
+                <span class="field__val"><strong id="set-ram-val">4</strong> Go</span>
+              </div>
+              <input type="range" id="set-ram" min="2" max="16" step="1" value="4" />
+              <p class="hint">Recommandé : 4–6 Go pour un modpack Forge.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__row card__row--col">
+              <label for="set-java">Chemin Java <span class="muted">(vide = détection automatique)</span></label>
+              <input type="text" id="set-java" placeholder="C:\Program Files\Eclipse Adoptium\...\bin\javaw.exe" />
+              <p class="hint">Minecraft 1.20.1 nécessite Java 17 ou supérieur.</p>
+            </div>
+            <div class="card__sep"></div>
+            <label class="toggle">
+              <input type="checkbox" id="set-keep" />
+              <span class="toggle__track"><span class="toggle__thumb"></span></span>
+              <span class="toggle__label">Garder le launcher ouvert pendant le jeu</span>
+            </label>
+          </div>
+
+          <div class="card">
+            <div class="card__row">
+              <div>
+                <div class="card__label">Dossier de jeu</div>
+                <div class="card__path" id="set-gamedir">—</div>
+              </div>
+              <button id="btn-opendir" class="btn btn--ghost">Ouvrir</button>
+            </div>
+          </div>
+
+          <div class="settings__foot">
+            <div class="about">
+              <span id="about-version">CraftIndustries Launcher</span>
+              <button id="btn-github" class="link">Dépôt GitHub ↗</button>
+            </div>
+            <div class="settings__actions">
+              <span class="saved hidden" id="set-saved">Enregistré ✓</span>
+              <button id="btn-save" class="btn btn--primary">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <!-- Bandeau de mise à jour -->
   <div id="update-toast" class="toast hidden">
     <span id="update-text"></span>
-    <button id="btn-update" class="btn btn--primary hidden">Redémarrer</button>
-  </div>
-
-  <!-- Modale paramètres -->
-  <div id="settings-modal" class="modal hidden">
-    <div class="modal__box">
-      <h2>Paramètres</h2>
-
-      <label class="field">
-        <span>Mémoire allouée : <strong id="ram-value">4096</strong> Mo</span>
-        <input type="range" id="ram-max" min="2048" max="16384" step="512" value="4096" />
-      </label>
-
-      <label class="field">
-        <span>Chemin Java (vide = automatique)</span>
-        <input type="text" id="java-path" placeholder="C:\\Program Files\\Eclipse Adoptium\\...\\bin\\javaw.exe" />
-      </label>
-
-      <label class="field field--row">
-        <input type="checkbox" id="keep-open" />
-        <span>Garder le launcher ouvert pendant le jeu</span>
-      </label>
-
-      <div class="modal__actions">
-        <button id="btn-settings-cancel" class="btn btn--ghost">Annuler</button>
-        <button id="btn-settings-save" class="btn btn--primary">Enregistrer</button>
-      </div>
-    </div>
+    <button id="btn-update" class="btn btn--primary btn--sm hidden">Redémarrer</button>
   </div>
 
   <script src="renderer.js"></script>

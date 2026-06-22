@@ -2,6 +2,8 @@
 
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
+const fs = require('fs');
+const net = require('net');
 const { autoUpdater } = require('electron-updater');
 
 const config = require('./config');
@@ -21,13 +23,33 @@ function fmtErr(e) {
   try { return JSON.stringify(e); } catch { return String(e); }
 }
 
+// Test de joignabilité TCP du serveur (connexion simple, sans protocole MC complet).
+function pingServer(host, port, timeout = 3500) {
+  return new Promise((resolve) => {
+    const socket = new net.Socket();
+    let done = false;
+    const finish = (online) => {
+      if (done) return;
+      done = true;
+      try { socket.destroy(); } catch { /* ignore */ }
+      resolve({ online });
+    };
+    socket.setTimeout(timeout);
+    socket.once('connect', () => finish(true));
+    socket.once('timeout', () => finish(false));
+    socket.once('error', () => finish(false));
+    try { socket.connect(port || 25565, host); } catch { finish(false); }
+  });
+}
+
 function createWindow() {
   win = new BrowserWindow({
-    width: 980,
-    height: 600,
-    resizable: false,
+    width: 1100,
+    height: 700,
+    minWidth: 1000,
+    minHeight: 640,
     frame: false,
-    backgroundColor: '#0f1115',
+    backgroundColor: '#0d0f14',
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -36,7 +58,6 @@ function createWindow() {
     }
   });
 
-  // Diagnostics : on remonte les erreurs du renderer et du preload dans la console principale.
   win.webContents.on('preload-error', (_e, file, error) => {
     console.error('[preload-error]', file, error && error.stack ? error.stack : error);
   });
@@ -50,7 +71,6 @@ function createWindow() {
   win.once('ready-to-show', () => win.show());
   if (isDev) win.webContents.openDevTools({ mode: 'detach' });
 
-  // Autotest : vérifie que le pont preload (window.api) est bien exposé.
   if (isSelftest) {
     win.webContents.on('did-finish-load', async () => {
       try {
@@ -62,6 +82,28 @@ function createWindow() {
         console.log('[selftest] exec fail: ' + fmtErr(e));
       }
       setTimeout(() => app.exit(0), 1200);
+    });
+  }
+
+  // Mode capture (--shot [--view mods|settings]) : screenshot du rendu réel puis quitte.
+  if (process.argv.includes('--shot')) {
+    win.webContents.on('did-finish-load', () => {
+      setTimeout(async () => {
+        try {
+          const vIdx = process.argv.indexOf('--view');
+          const v = vIdx !== -1 ? process.argv[vIdx + 1] : 'home';
+          if (v && v !== 'home') {
+            await win.webContents.executeJavaScript(
+              `document.querySelector('.nav__item[data-view="${v}"]').click()`
+            );
+            await new Promise((r) => setTimeout(r, 500));
+          }
+          const img = await win.webContents.capturePage();
+          fs.writeFileSync(path.join(__dirname, '..', '..', `shot.png`), img.toPNG());
+          console.log('[shot] saved view=' + v);
+        } catch (e) { console.log('[shot] fail: ' + fmtErr(e)); }
+        app.exit(0);
+      }, 4500);
     });
   }
 }
@@ -88,6 +130,17 @@ ipcMain.on('win:close', () => win && win.close());
 ipcMain.on('open:external', (_e, url) => {
   if (typeof url === 'string' && /^https?:\/\//.test(url)) shell.openExternal(url);
 });
+ipcMain.on('open:gameDir', () => {
+  try { fs.mkdirSync(config.getGameDir(), { recursive: true }); } catch { /* ignore */ }
+  shell.openPath(config.getGameDir());
+});
+
+/* ---------- Infos appli ---------- */
+ipcMain.handle('app:info', () => ({
+  version: app.getVersion(),
+  repo: config.repo,
+  gameDir: config.getGameDir()
+}));
 
 /* ---------- Paramètres ---------- */
 ipcMain.handle('settings:get', () => config.loadSettings());
@@ -119,12 +172,19 @@ ipcMain.handle('modpack:info', async () => {
         minecraft: m.minecraft,
         forge: m.forge.version,
         mods: m.mods.length,
+        modList: m.mods.map((x) => ({ name: x.name, size: x.size || 0 })),
         server: m.server || null
       }
     };
   } catch (e) {
     return { ok: false, error: fmtErr(e) };
   }
+});
+
+/* ---------- Ping serveur ---------- */
+ipcMain.handle('server:ping', async (_e, target) => {
+  if (!target || !target.ip) return { online: false };
+  return pingServer(target.ip, target.port || 25565);
 });
 
 /* ---------- Jouer (sync + lancement) ---------- */

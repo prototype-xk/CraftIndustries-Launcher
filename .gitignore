@@ -5,6 +5,9 @@ node_modules/
 dist/
 out/
 
+# Captures de test (mode --shot)
+shot*.png
+
 # Staging local des mods (ne pas committer les .jar des mods ici)
 build-modpack/mods/*.jar
 
