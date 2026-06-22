@@ -10,7 +10,16 @@ const { fetchManifest, syncMods } = require('./modpack');
 const { launchGame } = require('./launcher');
 
 const isDev = process.argv.includes('--dev');
+const isSelftest = process.argv.includes('--selftest');
 let win = null;
+
+// msmc rejette parfois avec une chaîne (code lexique) plutôt qu'un Error :
+// on normalise pour ne jamais afficher "undefined".
+function fmtErr(e) {
+  if (e instanceof Error) return e.message;
+  if (typeof e === 'string') return e;
+  try { return JSON.stringify(e); } catch { return String(e); }
+}
 
 function createWindow() {
   win = new BrowserWindow({
@@ -27,9 +36,34 @@ function createWindow() {
     }
   });
 
+  // Diagnostics : on remonte les erreurs du renderer et du preload dans la console principale.
+  win.webContents.on('preload-error', (_e, file, error) => {
+    console.error('[preload-error]', file, error && error.stack ? error.stack : error);
+  });
+  if (isDev) {
+    win.webContents.on('console-message', (_e, level, message, line, source) => {
+      console.log(`[renderer] ${message} (${source}:${line})`);
+    });
+  }
+
   win.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
   win.once('ready-to-show', () => win.show());
   if (isDev) win.webContents.openDevTools({ mode: 'detach' });
+
+  // Autotest : vérifie que le pont preload (window.api) est bien exposé.
+  if (isSelftest) {
+    win.webContents.on('did-finish-load', async () => {
+      try {
+        const r = await win.webContents.executeJavaScript(
+          'JSON.stringify({ api: typeof window.api, keys: window.api ? Object.keys(window.api) : null })'
+        );
+        console.log('[selftest] ' + r);
+      } catch (e) {
+        console.log('[selftest] exec fail: ' + fmtErr(e));
+      }
+      setTimeout(() => app.exit(0), 1200);
+    });
+  }
 }
 
 function send(channel, payload) {
@@ -64,7 +98,8 @@ ipcMain.handle('auth:login', async () => {
   try {
     return { ok: true, profile: await auth.login() };
   } catch (e) {
-    return { ok: false, error: e.message };
+    console.error('[auth:login] échec :', fmtErr(e));
+    return { ok: false, error: fmtErr(e) };
   }
 });
 ipcMain.handle('auth:loginSilent', async () => {
@@ -88,7 +123,7 @@ ipcMain.handle('modpack:info', async () => {
       }
     };
   } catch (e) {
-    return { ok: false, error: e.message };
+    return { ok: false, error: fmtErr(e) };
   }
 });
 
@@ -133,8 +168,8 @@ ipcMain.handle('game:play', async () => {
 
     return { ok: true };
   } catch (e) {
-    send('status', 'Erreur : ' + e.message);
-    return { ok: false, error: e.message };
+    send('status', 'Erreur : ' + fmtErr(e));
+    return { ok: false, error: fmtErr(e) };
   } finally {
     launching = false;
   }
@@ -147,7 +182,7 @@ function setupUpdater() {
   autoUpdater.on('update-available', (i) => send('update', { state: 'available', version: i.version }));
   autoUpdater.on('download-progress', (p) => send('update', { state: 'downloading', percent: Math.round(p.percent) }));
   autoUpdater.on('update-downloaded', () => send('update', { state: 'ready' }));
-  autoUpdater.on('error', (e) => send('update', { state: 'error', message: String(e && e.message || e) }));
+  autoUpdater.on('error', (e) => send('update', { state: 'error', message: fmtErr(e) }));
   autoUpdater.checkForUpdates().catch(() => {});
 }
 ipcMain.on('update:install', () => autoUpdater.quitAndInstall());

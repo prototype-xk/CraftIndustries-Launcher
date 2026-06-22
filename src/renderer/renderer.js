@@ -1,6 +1,13 @@
 'use strict';
 
 /* global window, document */
+
+// IIFE : `window.api` est exposé par contextBridge comme propriété globale
+// NON-configurable. Au niveau racine d'un script classique, `const api = ...`
+// tenterait de redéclarer ce nom -> "SyntaxError: Identifier 'api' has already
+// been declared", ce qui ferait échouer TOUT le script (boutons inertes).
+// En l'enfermant dans une fonction, `const api` devient local : plus de conflit.
+(function () {
 const api = window.api;
 
 const $ = (id) => document.getElementById(id);
@@ -182,3 +189,4 @@ el.btnSettingsSave.addEventListener('click', async () => {
     setStatus('Connectez-vous pour jouer.');
   }
 })();
+})(); // fin de l'IIFE principale

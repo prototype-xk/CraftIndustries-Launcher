@@ -4,8 +4,7 @@
 // On ouvre une fenêtre Electron pour le login Microsoft (OAuth officiel),
 // puis on conserve un "refresh token" pour les connexions suivantes (login silencieux).
 //
-// NOTE : les noms de méthodes ci-dessous suivent l'API msmc v4
-// (Auth, launch('electron'), getMinecraft, save, refresh, mclc).
+// API msmc v5 : Auth, launch('electron'), getMinecraft, save, refresh, mclc.
 
 const fs = require('fs');
 const { Auth } = require('msmc');
@@ -38,8 +37,11 @@ function profileOf(mc) {
 
 // Connexion interactive (ouvre la fenêtre Microsoft).
 async function login() {
+  console.log('[auth] Ouverture de la fenêtre Microsoft...');
   const xbox = await authManager.launch('electron');
+  console.log('[auth] Code reçu, récupération du profil Minecraft...');
   currentMc = await xbox.getMinecraft();
+  console.log('[auth] Connecté en tant que', currentMc.profile && currentMc.profile.name);
   saveRefresh(xbox.save());
   return profileOf(currentMc);
 }
@@ -53,7 +55,8 @@ async function loginSilent() {
     currentMc = await xbox.getMinecraft();
     saveRefresh(xbox.save());
     return profileOf(currentMc);
-  } catch {
+  } catch (e) {
+    console.log('[auth] Reconnexion auto impossible :', e && e.message ? e.message : e);
     return null; // token expiré/invalide : l'utilisateur devra se reconnecter
   }
 }
