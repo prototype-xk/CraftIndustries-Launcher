@@ -1,17 +1,17 @@
 {
-  "name": "launcher-custom-mc",
+  "name": "craftindustries-launcher",
   "version": "1.0.0",
-  "description": "Launcher custom pour un serveur Minecraft moddé (Forge) avec authentification Microsoft et mises à jour via GitHub.",
+  "description": "Launcher custom pour le serveur Minecraft moddé CraftIndustries (Forge) avec authentification Microsoft et mises à jour via GitHub.",
   "main": "src/main/main.js",
-  "author": "Proto",
+  "author": "prototype-xk",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/VOTRE_PSEUDO_GITHUB/launcher-custom-mc.git"
+    "url": "https://github.com/prototype-xk/CraftIndustries-Launcher.git"
   },
   "launcher": {
     "branch": "main",
-    "serverName": "Mon Serveur Moddé",
+    "serverName": "CraftIndustries",
     "minecraft": "1.20.1",
     "forge": "47.3.0",
     "serverIp": "play.exemple.fr",

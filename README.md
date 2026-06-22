@@ -1,6 +1,6 @@
-# Launcher Custom MC
+# CraftIndustries Launcher
 
-Launcher Windows pour un **serveur Minecraft moddé (Forge)**, en Electron, avec :
+Launcher Windows pour le **serveur Minecraft moddé CraftIndustries (Forge)**, en Electron, avec :
 
 - 🔐 **Authentification Microsoft** officielle (OAuth, comptes premium)
 - 📦 **Synchronisation automatique des mods** depuis GitHub (le joueur a toujours les bons mods)
@@ -12,20 +12,20 @@ Launcher Windows pour un **serveur Minecraft moddé (Forge)**, en Electron, avec
 
 ---
 
-## 1. Configuration (à faire une seule fois)
+## 1. Configuration
 
-Tout est centralisé dans **`package.json`** :
+Tout est centralisé dans **`package.json`** (déjà câblé sur ce dépôt) :
 
 ```jsonc
 "repository": {
-  "url": "https://github.com/VOTRE_PSEUDO_GITHUB/launcher-custom-mc.git" // ← votre dépôt
+  "url": "https://github.com/prototype-xk/CraftIndustries-Launcher.git"
 },
 "launcher": {
   "branch": "main",
-  "serverName": "Mon Serveur Moddé",   // ← nom affiché
-  "minecraft": "1.20.1",               // ← version MC
-  "forge": "47.3.0",                   // ← version Forge
-  "serverIp": "play.exemple.fr",       // ← IP de votre serveur
+  "serverName": "CraftIndustries",    // ← nom affiché
+  "minecraft": "1.20.1",              // ← version MC
+  "forge": "47.3.0",                  // ← version Forge
+  "serverIp": "play.exemple.fr",      // ← À REMPLACER par l'IP de votre serveur
   "serverPort": 25565
 }
 ```
@@ -45,24 +45,11 @@ npm run dev      # lance le launcher (mode dev, DevTools ouverts)
 - `npm start` : lance le launcher normalement.
 - `npm run dev` : idem + DevTools, **sans** auto-update.
 
-Le dossier de jeu est isolé dans `%APPDATA%\.launcher-custom-mc` (séparé du `.minecraft` officiel).
+Le dossier de jeu est isolé dans `%APPDATA%\.craftindustries` (séparé du `.minecraft` officiel).
 
 ---
 
-## 3. Mettre le projet sur GitHub
-
-```bash
-git init
-git add .
-git commit -m "Initial commit : launcher custom MC"
-git branch -M main
-git remote add origin https://github.com/VOTRE_PSEUDO_GITHUB/launcher-custom-mc.git
-git push -u origin main
-```
-
----
-
-## 4. Gérer les mods (le modpack)
+## 3. Gérer les mods (le modpack)
 
 Les mods sont décrits dans **`modpack/manifest.json`** et distribués via **GitHub Releases**.
 
@@ -101,7 +88,7 @@ Format d'une entrée de mod :
 ```json
 {
   "name": "jei-1.20.1-forge.jar",
-  "url": "https://github.com/USER/REPO/releases/download/modpack-v1/jei-1.20.1-forge.jar",
+  "url": "https://github.com/prototype-xk/CraftIndustries-Launcher/releases/download/modpack-v1/jei-1.20.1-forge.jar",
   "sha1": "…",
   "size": 1234567
 }
@@ -109,7 +96,7 @@ Format d'une entrée de mod :
 
 ---
 
-## 5. Publier le launcher (+ auto-update)
+## 4. Publier le launcher (+ auto-update)
 
 L'auto-update est géré par GitHub Actions : il suffit de pousser un **tag de version**.
 
@@ -140,18 +127,15 @@ npm run dist     # génère l'installeur dans dist/
 
 ---
 
-## 6. Authentification Microsoft
+## 5. Authentification Microsoft
 
 Le bouton **Se connecter** ouvre la fenêtre de connexion Microsoft officielle.
-Le launcher ne stocke qu'un *refresh token* local (`%APPDATA%\Launcher Custom MC\msmc-auth.json`)
+Le launcher ne stocke qu'un *refresh token* local (`%APPDATA%\CraftIndustries Launcher\msmc-auth.json`)
 pour reconnecter automatiquement au démarrage. Aucun mot de passe n'est manipulé.
-
-> Si votre serveur est en `online-mode=false`, ce launcher (auth Microsoft) reste
-> compatible : il connecte de vrais comptes premium.
 
 ---
 
-## 7. Java
+## 6. Java
 
 Le launcher détecte automatiquement Java (Adoptium / JDK installés, sinon le PATH).
 Minecraft **1.20.1 nécessite Java 17+**. Vous pouvez forcer un chemin précis dans
@@ -162,7 +146,7 @@ Minecraft **1.20.1 nécessite Java 17+**. Vous pouvez forcer un chemin précis d
 ## Structure du projet
 
 ```
-launcher-custom-mc/
+CraftIndustries-Launcher/
 ├── package.json              ← config centrale (dépôt, versions, serveur)
 ├── electron-builder.yml      ← config de packaging / publication
 ├── modpack/

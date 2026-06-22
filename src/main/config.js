@@ -28,7 +28,7 @@ const MANIFEST_URL =
 
 // Dossier de jeu isolé (séparé du .minecraft officiel).
 function getGameDir() {
-  return path.join(app.getPath('appData'), '.launcher-custom-mc');
+  return path.join(app.getPath('appData'), '.craftindustries');
 }
 
 function settingsFile() {

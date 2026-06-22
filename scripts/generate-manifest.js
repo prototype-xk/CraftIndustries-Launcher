@@ -66,7 +66,7 @@ const mods = jars.map((name) => {
 });
 
 const manifest = {
-  name: L.serverName || 'Mon Serveur Moddé',
+  name: L.serverName || 'CraftIndustries',
   minecraft,
   forge: {
     version: forgeVersion,

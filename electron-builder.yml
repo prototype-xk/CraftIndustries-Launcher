@@ -1,6 +1,6 @@
-appId: com.proto.launchercustommc
-productName: Launcher Custom MC
-copyright: Copyright © 2026 Proto
+appId: com.prototypexk.craftindustries
+productName: CraftIndustries Launcher
+copyright: Copyright © 2026 prototype-xk
 
 directories:
   output: dist
@@ -25,7 +25,7 @@ nsis:
   allowToChangeInstallationDirectory: true
   createDesktopShortcut: true
   createStartMenuShortcut: true
-  shortcutName: Launcher Custom MC
+  shortcutName: CraftIndustries Launcher
 
 # La cible de publication (owner/repo) est déduite du champ "repository"
 # de package.json. C'est ce qui alimente aussi l'auto-update (electron-updater).
