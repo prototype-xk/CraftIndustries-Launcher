@@ -13,11 +13,12 @@ files:
   - "package.json"
   - "!**/*.map"
 
-# Icône optionnelle : déposez build/icon.ico (256x256) puis décommentez la ligne.
+# ===================== Windows =====================
 win:
   target:
-    - nsis
-  # icon: build/icon.ico
+    - target: nsis
+      arch: [x64]
+  # icon: build/icon.ico   (déposez un .ico 256x256 puis décommentez)
 
 nsis:
   oneClick: false
@@ -27,7 +28,29 @@ nsis:
   createStartMenuShortcut: true
   shortcutName: CraftIndustries Launcher
 
-# La cible de publication (owner/repo) est déduite du champ "repository"
-# de package.json. C'est ce qui alimente aussi l'auto-update (electron-updater).
+# ===================== macOS =====================
+# dmg = installeur ; zip = requis pour l'auto-update macOS.
+# Build pour Intel (x64) ET Apple Silicon (arm64).
+mac:
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+    - target: zip
+      arch: [x64, arm64]
+  category: public.app-category.games
+  # icon: build/icon.icns
+
+# ===================== Linux =====================
+# AppImage = portable et compatible auto-update.
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+  category: Game
+  # icon: build/icon.png
+
+# La cible (owner/repo) est déduite du champ "repository" de package.json.
+# Par défaut electron-builder crée une release en BROUILLON : on y publie
+# les artefacts des 3 OS, puis on publie la release manuellement sur GitHub.
 publish:
   provider: github

@@ -96,9 +96,9 @@ Format d'une entrée de mod :
 
 ---
 
-## 4. Publier le launcher (+ auto-update)
+## 4. Publier le launcher — Windows / macOS / Linux (+ auto-update)
 
-L'auto-update est géré par GitHub Actions : il suffit de pousser un **tag de version**.
+Le build des **3 plateformes** est automatique. Il suffit de pousser un **tag de version** :
 
 ```bash
 # Incrémentez "version" dans package.json (ex: 1.0.1) puis :
@@ -108,22 +108,39 @@ git tag v1.0.1
 git push origin main --tags
 ```
 
-Le workflow [`.github/workflows/build.yml`](.github/workflows/build.yml) :
-1. build le `.exe` (NSIS) sur `windows-latest`,
-2. publie l'installeur **et** `latest.yml` dans une GitHub Release.
+Le workflow [`.github/workflows/build.yml`](.github/workflows/build.yml) lance **3 runners en parallèle** :
 
-Les launchers déjà installés détectent la nouvelle version au démarrage,
-la téléchargent et proposent **« Redémarrer »**.
+| OS runner | Artefacts produits |
+|-----------|--------------------|
+| `windows-latest` | `.exe` (NSIS) + `latest.yml` |
+| `macos-latest` | `.dmg` + `.zip` (Intel x64 **et** Apple Silicon arm64) + `latest-mac.yml` |
+| `ubuntu-latest` | `.AppImage` + `latest-linux.yml` |
+
+Les 3 jobs déposent leurs fichiers dans **une même release GitHub, créée en brouillon**.
+→ Vérifiez les artefacts dans l'onglet *Releases*, puis cliquez **« Publish release »**.
+Une fois publiée, les launchers installés détectent la mise à jour et proposent **« Redémarrer »**.
+
+> Vous pouvez aussi lancer le build à la main : onglet **Actions → Build & Release Launcher → Run workflow**.
+
+### Signature de code (important)
+
+Aucun certificat n'est utilisé sur le CI, donc les binaires ne sont **pas signés** :
+
+- **Windows** : SmartScreen affiche un avertissement (« Informations complémentaires » → « Exécuter quand même »).
+- **macOS** : Gatekeeper bloque l'ouverture → **clic droit → Ouvrir** la 1ʳᵉ fois. ⚠️ L'auto-update ne
+  fonctionne pas sur macOS sans signature Apple (les utilisateurs retéléchargent le `.dmg`).
+- **Linux** : l'AppImage fonctionne directement (`chmod +x` puis double-clic).
+
+Pour supprimer ces avertissements il faut un certificat (Apple Developer ≈ 99 $/an, certificat Windows payant).
 
 ### Build local (test, sans publier)
 
 ```bash
-npm run dist     # génère l'installeur dans dist/
+npm run dist     # construit pour VOTRE OS uniquement, dans dist/
 ```
 
-> 💡 L'`.exe` n'est pas signé : Windows SmartScreen affichera un avertissement
-> (« Informations complémentaires » → « Exécuter quand même »). Pour l'éviter,
-> il faut un certificat de signature de code (payant).
+> Le build local ne génère que la plateforme courante (on ne peut pas créer un `.dmg`
+> hors macOS). Le multi-plateforme se fait via GitHub Actions ci-dessus.
 
 ---
 

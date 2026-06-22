@@ -5,13 +5,19 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:   # permet aussi un lancement manuel depuis l'onglet Actions
 
 permissions:
-  contents: write   # nécessaire pour publier la release et le fichier latest.yml
+  contents: write   # nécessaire pour publier la release et les fichiers latest*.yml
 
 jobs:
-  build:
-    runs-on: windows-latest
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,3 +35,5 @@ jobs:
         run: npm run publish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Pas de signature de code sur le CI (pas de certificat Apple/Windows).
+          CSC_IDENTITY_AUTO_DISCOVERY: false
