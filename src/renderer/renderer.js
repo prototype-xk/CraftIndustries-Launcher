@@ -28,11 +28,12 @@ const el = {
   console: $('console'), consoleBody: $('console-body'), btnConsoleClear: $('btn-console-clear'),
   // mods
   modsList: $('mods-list'), modsEmpty: $('mods-empty'), modsCount: $('mods-count'),
+  overridesCard: $('overrides-card'), overridesSize: $('overrides-size'),
   // settings
   setRam: $('set-ram'), setRamVal: $('set-ram-val'), setJava: $('set-java'),
   setKeep: $('set-keep'), setGamedir: $('set-gamedir'), btnOpendir: $('btn-opendir'),
   btnSave: $('btn-save'), setSaved: $('set-saved'), aboutVersion: $('about-version'),
-  btnGithub: $('btn-github')
+  btnGithub: $('btn-github'), btnRepair: $('btn-repair')
 };
 
 let connected = false;
@@ -152,6 +153,13 @@ async function loadModpackInfo() {
   el.modsCount.textContent = i.mods + (i.mods > 1 ? ' mods' : ' mod');
   renderMods(i.modList);
 
+  if (i.overrides) {
+    el.overridesCard.classList.remove('hidden');
+    el.overridesSize.textContent = i.overrides.size ? fmtSize(i.overrides.size) : '';
+  } else {
+    el.overridesCard.classList.add('hidden');
+  }
+
   if (i.server && i.server.ip) {
     serverTarget = i.server;
     el.homeServer.textContent = `Adresse du serveur : ${i.server.ip}:${i.server.port || 25565}`;
@@ -216,6 +224,14 @@ el.btnSave.addEventListener('click', async () => {
 });
 el.btnOpendir.addEventListener('click', () => api.openGameDir());
 el.btnGithub.addEventListener('click', () => { if (repoUrl) api.openExternal(repoUrl); });
+el.btnRepair.addEventListener('click', async () => {
+  el.btnRepair.disabled = true;
+  el.btnRepair.textContent = 'Réinitialisation…';
+  await api.repairPack();
+  el.btnRepair.textContent = 'Forcer la resynchro';
+  el.btnRepair.disabled = false;
+  setStatus('Installation réinitialisée — tout sera re-synchronisé au prochain lancement.');
+});
 
 /* ---------- Événements push ---------- */
 api.onStatus((m) => setStatus(m));
@@ -226,6 +242,10 @@ api.onProgress((p) => {
     const frac = p.size ? p.recv / p.size : 0;
     if (p.total) pct = ((p.done + frac) / p.total) * 100;
     if (p.file && p.size) setStatus(`Téléchargement ${p.file} — ${Math.round(frac * 100)}%`);
+  } else if (p.phase === 'overrides') {
+    const frac = p.size ? p.recv / p.size : 0;
+    pct = frac * 100;
+    setStatus(`Configs & scripts — ${Math.round(frac * 100)}%`);
   } else if (p.phase === 'mc') {
     const cur = typeof p.task === 'number' ? p.task : p.current;
     const tot = p.total;

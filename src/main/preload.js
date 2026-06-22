@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld('api', {
   // Modpack / serveur / lancement
   getModpackInfo: () => ipcRenderer.invoke('modpack:info'),
   pingServer: (ip, port) => ipcRenderer.invoke('server:ping', { ip, port }),
+  repairPack: () => ipcRenderer.invoke('pack:repair'),
   play: () => ipcRenderer.invoke('game:play'),
 
   // Paramètres

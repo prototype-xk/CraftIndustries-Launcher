@@ -11,6 +11,9 @@ shot*.png
 # Staging local des mods (ne pas committer les .jar des mods ici)
 build-modpack/mods/*.jar
 
+# Archive d'overrides générée (uploadée sur la release, pas versionnée)
+build-modpack/overrides.zip
+
 # Logs / divers
 *.log
 npm-debug.log*

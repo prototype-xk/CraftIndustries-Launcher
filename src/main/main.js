@@ -8,7 +8,7 @@ const { autoUpdater } = require('electron-updater');
 
 const config = require('./config');
 const auth = require('./auth');
-const { fetchManifest, syncMods } = require('./modpack');
+const { fetchManifest, syncMods, syncOverrides, repairPack } = require('./modpack');
 const { launchGame } = require('./launcher');
 
 const isDev = process.argv.includes('--dev');
@@ -161,6 +161,11 @@ ipcMain.handle('auth:loginSilent', async () => {
 });
 ipcMain.handle('auth:logout', async () => ({ ok: auth.logout() }));
 
+/* ---------- Réparation du pack ---------- */
+ipcMain.handle('pack:repair', async () => {
+  try { return { ok: repairPack() }; } catch (e) { return { ok: false, error: fmtErr(e) }; }
+});
+
 /* ---------- Infos modpack ---------- */
 ipcMain.handle('modpack:info', async () => {
   try {
@@ -173,6 +178,7 @@ ipcMain.handle('modpack:info', async () => {
         forge: m.forge.version,
         mods: m.mods.length,
         modList: m.mods.map((x) => ({ name: x.name, size: x.size || 0 })),
+        overrides: m.overrides ? { size: m.overrides.size || 0 } : null,
         server: m.server || null
       }
     };
@@ -202,6 +208,11 @@ ipcMain.handle('game:play', async () => {
     await syncMods(manifest, {
       onStatus: (m) => send('status', m),
       onProgress: (p) => send('progress', { phase: 'mods', ...p })
+    });
+
+    await syncOverrides(manifest, {
+      onStatus: (m) => send('status', m),
+      onProgress: (p) => send('progress', p)
     });
 
     const settings = config.loadSettings();

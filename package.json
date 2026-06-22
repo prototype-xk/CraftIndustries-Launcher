@@ -25,6 +25,7 @@
     "make-manifest": "node scripts/generate-manifest.js"
   },
   "dependencies": {
+    "adm-zip": "^0.5.17",
     "electron-updater": "^6.8.9",
     "minecraft-launcher-core": "^3.18.2",
     "msmc": "^5.0.5"

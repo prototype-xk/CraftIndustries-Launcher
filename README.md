@@ -49,48 +49,71 @@ Le dossier de jeu est isolé dans `%APPDATA%\.craftindustries` (séparé du `.mi
 
 ---
 
-## 3. Gérer les mods (le modpack)
+## 3. Gérer le modpack (mods + configs / KubeJS)
 
-Les mods sont décrits dans **`modpack/manifest.json`** et distribués via **GitHub Releases**.
+Un modpack = **les mods** *et* **tout le reste** (configs, scripts KubeJS, ressources…).
+Le launcher synchronise les deux automatiquement au lancement :
 
-### a) Ajouter / mettre à jour les mods
+- **Mods** : un `.jar` par entrée du manifeste, dans `mods/`.
+- **Overrides** : tout le reste, empaqueté dans un `overrides.zip` extrait dans le dossier
+  de jeu (avec **suppression des fichiers retirés** depuis la version précédente).
 
-1. Déposez les `.jar` de vos mods dans `build-modpack/mods/`.
-2. Générez le manifeste (calcule les SHA-1 et les URLs) :
+### a) Préparer le contenu
 
+```
+build-modpack/
+├── mods/                 ← vos .jar
+└── overrides/            ← tout le reste, en respectant l'arborescence du jeu
+    ├── config/
+    ├── kubejs/
+    │   ├── server_scripts/
+    │   ├── startup_scripts/
+    │   └── ...
+    ├── defaultconfigs/
+    └── resourcepacks/
+```
+
+### b) Générer le manifeste + l'archive
+
+```bash
+npm run make-manifest -- --tag modpack-v1
+```
+
+Cela produit `modpack/manifest.json` (mods + entrée `overrides`) **et**
+`build-modpack/overrides.zip`.
+
+### c) Publier
+
+1. Poussez le manifeste :
    ```bash
-   npm run make-manifest -- --tag modpack-v1
+   git add modpack/manifest.json && git commit -m "Modpack v1" && git push
    ```
+2. Sur GitHub → **Releases → Draft a new release**, tag `modpack-v1`, puis uploadez :
+   - tous les `.jar` de `build-modpack/mods/`,
+   - `build-modpack/overrides.zip`.
+3. Publiez la release.
 
-3. Poussez le manifeste mis à jour :
-
-   ```bash
-   git add modpack/manifest.json
-   git commit -m "Modpack v1"
-   git push
-   ```
-
-4. Sur GitHub → **Releases → Draft a new release** :
-   - Tag : `modpack-v1` (le même que `--tag`)
-   - Uploadez les mêmes `.jar` que dans `build-modpack/mods/`
-   - Publiez.
-
-Au prochain lancement, **chaque joueur télécharge automatiquement** les mods manquants
-et supprime ceux qui ne sont plus dans la liste. Pour mettre à jour : nouveau tag
-(`modpack-v2`), `make-manifest --tag modpack-v2`, push, nouvelle release.
+Pour une mise à jour : refaites avec un nouveau tag (`modpack-v2`, etc.). Les joueurs
+récupèrent automatiquement les changements (mods **et** configs) au lancement suivant.
+Le bouton **Paramètres → Forcer la resynchro** force un re-téléchargement complet.
 
 > ⚠️ Vérifiez les licences des mods avant de les redistribuer. Pour les mods qui
-> l'interdisent, mettez dans `manifest.json` une `url` pointant vers la source
-> officielle (Modrinth / CurseForge) plutôt que vers votre release.
+> l'interdisent, mettez une `url` pointant vers la source officielle (Modrinth /
+> CurseForge) plutôt que vers votre release.
 
-Format d'une entrée de mod :
+Format du manifeste :
 
 ```json
 {
-  "name": "jei-1.20.1-forge.jar",
-  "url": "https://github.com/prototype-xk/CraftIndustries-Launcher/releases/download/modpack-v1/jei-1.20.1-forge.jar",
-  "sha1": "…",
-  "size": 1234567
+  "mods": [
+    { "name": "jei-1.20.1-forge.jar", "url": "https://github.com/…/jei.jar", "sha1": "…", "size": 1234567 }
+  ],
+  "overrides": {
+    "name": "overrides.zip",
+    "url": "https://github.com/…/releases/download/modpack-v1/overrides.zip",
+    "sha1": "…",
+    "size": 654321
+  }
 }
 ```
 
