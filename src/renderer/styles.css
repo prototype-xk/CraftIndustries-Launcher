@@ -448,4 +448,73 @@ input[type="range"]::-webkit-slider-thumb {
 .lightbox { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; background: rgba(5, 8, 12, .88); cursor: zoom-out; }
 .lightbox img { max-width: 92%; max-height: 92%; border-radius: 8px; box-shadow: var(--shadow-lg); }
 
+/* ===== Splash de démarrage ===== */
+.splash {
+  position: fixed; inset: 0; z-index: 200; border-radius: var(--win-radius);
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(120% 120% at 50% 30%, #14283a 0%, #0b1018 55%, #070b11 100%);
+  transition: opacity .5s ease;
+}
+.splash.is-hiding { opacity: 0; pointer-events: none; }
+.splash__inner { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.splash__gear { color: var(--accent); filter: drop-shadow(0 0 26px var(--accent-glow)); animation: spin 3s linear infinite; }
+.splash__gear-hole { fill: #0b1018; }
+.splash__name { font-family: var(--font-title); font-size: 26px; font-weight: 700; letter-spacing: 1px; color: var(--text); }
+.splash__bar { width: 200px; height: 4px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+.splash__fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #7ce8ff); border-radius: 999px; animation: splashfill 1.5s ease forwards; }
+@keyframes splashfill { from { width: 0; } to { width: 100%; } }
+
+/* Trophée (accueil) */
+.hero__trophy {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  background: rgba(41, 198, 232, .1); border: 1px solid var(--border-2); color: var(--accent);
+  font-family: var(--font-title); font-size: 12px; padding: 4px 10px; border-radius: 8px; transition: background .14s;
+}
+.hero__trophy:hover { background: rgba(41, 198, 232, .18); }
+
+.page__actions { display: flex; align-items: center; gap: 10px; }
+
+/* ===== Thèmes (swatches) ===== */
+.themes { display: flex; gap: 12px; }
+.swatch {
+  width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
+  background: var(--sw); border: 2px solid var(--border-2); transition: transform .1s, box-shadow .14s;
+}
+.swatch:hover { transform: scale(1.08); }
+.swatch.is-active { border-color: #fff; box-shadow: 0 0 0 3px var(--sw); }
+
+/* ===== Succès ===== */
+.modal__title--ok { color: var(--accent); }
+.achgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-height: 360px; overflow-y: auto; }
+.ach { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--border); }
+.ach.locked { opacity: .45; filter: grayscale(1); }
+.ach__icon { font-size: 24px; width: 40px; text-align: center; }
+.ach__name { font-size: 13.5px; font-weight: 700; }
+.ach__desc { font-size: 11.5px; color: var(--text-faint); }
+
+/* ===== Toast succès ===== */
+.ach-toast {
+  position: fixed; right: 18px; bottom: 18px; z-index: 80;
+  display: flex; align-items: center; gap: 12px; max-width: 320px;
+  background: var(--surface-2); border: 1px solid var(--accent); border-radius: var(--radius);
+  padding: 12px 16px; box-shadow: 0 0 24px var(--accent-glow), var(--shadow-lg);
+  animation: slidein .3s ease;
+}
+@keyframes slidein { from { transform: translateX(120%); } to { transform: none; } }
+.ach-toast__icon { font-size: 28px; }
+.ach-toast__t { font-family: var(--font-title); font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--accent); }
+.ach-toast__d { font-size: 14px; font-weight: 700; }
+
+/* ===== Changelog ===== */
+.changelog { max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+.cl-ver { }
+.cl-ver__head { font-family: var(--font-title); font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+.cl-ver__date { color: var(--text-faint); font-size: 11.5px; font-weight: 400; margin-left: 8px; }
+.cl-ver ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.cl-ver li { font-size: 13px; color: var(--text-dim); padding-left: 16px; position: relative; }
+.cl-ver li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+
+/* Barre lightbox */
+.lightbox__bar { position: absolute; top: 18px; right: 18px; display: flex; gap: 8px; cursor: default; }
+
 .hidden { display: none !important; }

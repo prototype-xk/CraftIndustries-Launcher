@@ -5,9 +5,10 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
-  // Infos appli / stats
+  // Infos appli / stats / succès
   appInfo: () => ipcRenderer.invoke('app:info'),
   getStats: () => ipcRenderer.invoke('stats:get'),
+  getAchievements: () => ipcRenderer.invoke('achievements:list'),
 
   // Authentification
   login: () => ipcRenderer.invoke('auth:login'),
@@ -23,6 +24,8 @@ contextBridge.exposeInMainWorld('api', {
 
   // Screenshots
   listScreenshots: () => ipcRenderer.invoke('screens:list'),
+  copyScreenshot: (p) => ipcRenderer.invoke('screens:copy', p),
+  shareScreenshot: (p) => ipcRenderer.invoke('screens:share', p),
 
   // Paramètres
   getSettings: () => ipcRenderer.invoke('settings:get'),
@@ -44,5 +47,6 @@ contextBridge.exposeInMainWorld('api', {
   onClosed: (cb) => ipcRenderer.on('closed', () => cb()),
   onCrash: (cb) => ipcRenderer.on('crash', (_e, c) => cb(c)),
   onStats: (cb) => ipcRenderer.on('stats', (_e, s) => cb(s)),
+  onAchievement: (cb) => ipcRenderer.on('achievement', (_e, a) => cb(a)),
   onUpdate: (cb) => ipcRenderer.on('update', (_e, u) => cb(u))
 });

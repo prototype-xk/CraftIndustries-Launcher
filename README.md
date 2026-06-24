@@ -183,6 +183,36 @@ Minecraft **1.20.1 nécessite Java 17+**. Vous pouvez forcer un chemin précis d
 
 ---
 
+## 7. Fonctionnalités avancées (config)
+
+### Actualités
+Édite **`news.json`** à la racine du dépôt (tableau d'annonces). Format :
+```json
+[{ "tag": "Event", "title": "Titre", "date": "2026-06-23", "body": "Texte…" }]
+```
+
+### Changelog / Maintenance / Annonce (dans `modpack/manifest.json`)
+Ces champs sont **préservés** par `npm run make-manifest` :
+```jsonc
+"changelog": [ { "version": "modpack-v2", "date": "…", "entries": ["Ajout du mod X", "…"] } ],
+"maintenance": { "enabled": true, "message": "Serveur en maintenance jusqu'à 18h" },
+"announcement": { "text": "Wipe prévu dimanche !" }
+```
+- `maintenance.enabled: true` → bloque le bouton JOUER avec le message.
+- `announcement` → bandeau d'information.
+- `changelog` → bouton « Quoi de neuf » + fenêtre auto à la 1ʳᵉ ouverture après un changement de version.
+
+### Discord (dans `package.json` → `launcher`)
+- `discordAppId` : ID d'une application Discord (https://discord.com/developers) pour la **Rich Presence**
+  (« Joue sur CraftIndustries »). Uploade une image nommée `logo` dans l'app Discord (Art Assets).
+- `discordWebhook` : URL d'un webhook de salon Discord pour activer le **partage de screenshots**.
+
+### Succès, temps de jeu, thèmes, sons, tray
+Gérés automatiquement / via les **Paramètres** (thème d'accent, sons & ambiance, RAM détectée).
+Le launcher se **minimise dans la barre des tâches** (clic sur l'icône pour le rouvrir).
+
+---
+
 ## Structure du projet
 
 ```

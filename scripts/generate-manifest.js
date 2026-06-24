@@ -98,6 +98,14 @@ const manifest = {
 };
 if (overrides) manifest.overrides = overrides;
 
+// Préserve les champs édités à la main (non auto-générés) du manifeste existant.
+try {
+  const prev = JSON.parse(fs.readFileSync(path.join(root, 'modpack', 'manifest.json'), 'utf8'));
+  for (const k of ['changelog', 'maintenance', 'announcement']) {
+    if (prev[k] !== undefined) manifest[k] = prev[k];
+  }
+} catch { /* pas de manifeste précédent */ }
+
 fs.writeFileSync(path.join(root, 'modpack', 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');
 
 console.log(`✅ Manifeste généré (tag "${tag}") :`);

@@ -107,6 +107,27 @@ function applyOverridesArchive(zipPath, gameDir, prevFiles = []) {
   return newFiles;
 }
 
+// Sauvegarde best-effort des fichiers d'overrides actuels avant une mise à jour.
+// Conserve les 3 dernières sauvegardes dans gameDir/backups/<horodatage>/.
+function backupOverrides(gameDir, files) {
+  if (!files || !files.length) return;
+  try {
+    const root = path.join(gameDir, 'backups');
+    fs.mkdirSync(root, { recursive: true });
+    const existing = fs.readdirSync(root).filter((d) => /^\d{4}-/.test(d)).sort();
+    while (existing.length >= 3) { try { fs.rmSync(path.join(root, existing.shift()), { recursive: true, force: true }); } catch { /* */ } }
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const dest = path.join(root, stamp);
+    for (const rel of files) {
+      const src = path.join(gameDir, rel);
+      if (!fs.existsSync(src)) continue;
+      const out = path.join(dest, rel);
+      fs.mkdirSync(path.dirname(out), { recursive: true });
+      fs.copyFileSync(src, out);
+    }
+  } catch { /* non bloquant */ }
+}
+
 async function syncOverrides(manifest, { onStatus, onProgress } = {}) {
   const gameDir = config.getGameDir();
   fs.mkdirSync(gameDir, { recursive: true });
@@ -142,6 +163,10 @@ async function syncOverrides(manifest, { onStatus, onProgress } = {}) {
     }
   }
 
+  if (state.files && state.files.length) {
+    if (onStatus) onStatus('Sauvegarde des configs actuelles...');
+    backupOverrides(gameDir, state.files);
+  }
   if (onStatus) onStatus('Application des configs & scripts...');
   const files = applyOverridesArchive(tmp, gameDir, state.files || []);
   fs.rmSync(tmp, { force: true });

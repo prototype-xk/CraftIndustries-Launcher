@@ -28,6 +28,7 @@ const NEWS_URL =
 
 const serverName = L.serverName || 'CraftIndustries';
 const discordAppId = L.discordAppId || '';
+const discordWebhook = L.discordWebhook || '';
 
 function getGameDir() { return path.join(app.getPath('appData'), '.craftindustries'); }
 function settingsFile() { return path.join(app.getPath('userData'), 'settings.json'); }
@@ -39,9 +40,10 @@ const DEFAULT_SETTINGS = {
   ramMin: 2048,
   javaPath: '',
   keepLauncherOpen: false,
-  directJoin: true,    // rejoindre le serveur directement (si une IP est configurée)
-  uiSounds: true,      // petits sons d'interface
-  ambientMusic: false  // nappe d'ambiance
+  directJoin: true,
+  uiSounds: true,
+  ambientMusic: false,
+  theme: 'cyan'
 };
 
 function loadSettings() {
@@ -58,7 +60,7 @@ function saveSettings(partial) {
   return merged;
 }
 
-const DEFAULT_STATS = { playtimeMs: 0, sessions: 0, lastPlayed: null };
+const DEFAULT_STATS = { playtimeMs: 0, sessions: 0, lastPlayed: null, unlocked: [], everLoggedIn: false, lastSeenVersion: null };
 function getStats() {
   try {
     return { ...DEFAULT_STATS, ...JSON.parse(fs.readFileSync(statsFile(), 'utf8')) };
@@ -66,22 +68,23 @@ function getStats() {
     return { ...DEFAULT_STATS };
   }
 }
-function addSession(ms) {
-  const s = getStats();
-  s.playtimeMs += Math.max(0, ms || 0);
-  s.sessions += 1;
-  s.lastPlayed = Date.now();
+function saveStats(partial) {
+  const merged = { ...getStats(), ...partial };
   try {
     fs.mkdirSync(path.dirname(statsFile()), { recursive: true });
-    fs.writeFileSync(statsFile(), JSON.stringify(s, null, 2));
+    fs.writeFileSync(statsFile(), JSON.stringify(merged, null, 2));
   } catch { /* non bloquant */ }
-  return s;
+  return merged;
+}
+function addSession(ms) {
+  const s = getStats();
+  return saveStats({ playtimeMs: s.playtimeMs + Math.max(0, ms || 0), sessions: s.sessions + 1, lastPlayed: Date.now() });
 }
 
 module.exports = {
-  pkg, repo, serverName, discordAppId,
+  pkg, repo, serverName, discordAppId, discordWebhook,
   MANIFEST_URL, NEWS_URL,
   getGameDir, settingsFile, authFile, statsFile,
   DEFAULT_SETTINGS, loadSettings, saveSettings,
-  getStats, addSession
+  getStats, saveStats, addSession
 };

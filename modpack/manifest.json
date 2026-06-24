@@ -10,5 +10,16 @@
     "ip": "play.exemple.fr",
     "port": 25565
   },
-  "mods": []
+  "mods": [],
+  "changelog": [
+    {
+      "version": "modpack-v1",
+      "date": "2026-06-23",
+      "entries": [
+        "Lancement initial du modpack CraftIndustries",
+        "Base Forge 1.20.1",
+        "Configs et scripts KubeJS inclus automatiquement"
+      ]
+    }
+  ]
 }

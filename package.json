@@ -16,7 +16,8 @@
     "forge": "47.3.0",
     "serverIp": "play.exemple.fr",
     "serverPort": 25565,
-    "discordAppId": ""
+    "discordAppId": "",
+    "discordWebhook": ""
   },
   "scripts": {
     "start": "electron .",
