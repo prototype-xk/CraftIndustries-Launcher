@@ -1,15 +1,13 @@
 'use strict';
 
 // Configuration centrale du launcher.
-// Source de vérité unique : le fichier package.json (champs "repository" et "launcher").
-// => Pour pointer vers VOTRE dépôt, il suffit de modifier package.json.
+// Source de vérité unique : package.json (champs "repository" et "launcher").
 
 const fs = require('fs');
 const path = require('path');
 const { app } = require('electron');
 const pkg = require('../../package.json');
 
-// Déduit owner/repo depuis le champ "repository" de package.json.
 function repoInfo() {
   const url = (pkg.repository && pkg.repository.url) || '';
   const m = url.match(/github\.com[/:]([^/]+)\/([^/.]+)/i);
@@ -21,40 +19,38 @@ function repoInfo() {
 }
 
 const repo = repoInfo();
+const L = pkg.launcher || {};
 
-// URL "raw" du manifeste du modpack (toujours à jour sur la branche choisie).
 const MANIFEST_URL =
   `https://raw.githubusercontent.com/${repo.owner}/${repo.repo}/${repo.branch}/modpack/manifest.json`;
+const NEWS_URL =
+  `https://raw.githubusercontent.com/${repo.owner}/${repo.repo}/${repo.branch}/news.json`;
 
-// Dossier de jeu isolé (séparé du .minecraft officiel).
-function getGameDir() {
-  return path.join(app.getPath('appData'), '.craftindustries');
-}
+const serverName = L.serverName || 'CraftIndustries';
+const discordAppId = L.discordAppId || '';
 
-function settingsFile() {
-  return path.join(app.getPath('userData'), 'settings.json');
-}
-
-function authFile() {
-  return path.join(app.getPath('userData'), 'msmc-auth.json');
-}
+function getGameDir() { return path.join(app.getPath('appData'), '.craftindustries'); }
+function settingsFile() { return path.join(app.getPath('userData'), 'settings.json'); }
+function authFile() { return path.join(app.getPath('userData'), 'msmc-auth.json'); }
+function statsFile() { return path.join(app.getPath('userData'), 'stats.json'); }
 
 const DEFAULT_SETTINGS = {
-  ramMax: 4096, // Mo
-  ramMin: 2048, // Mo
-  javaPath: '', // vide = détection automatique
-  keepLauncherOpen: false
+  ramMax: 4096,
+  ramMin: 2048,
+  javaPath: '',
+  keepLauncherOpen: false,
+  directJoin: true,    // rejoindre le serveur directement (si une IP est configurée)
+  uiSounds: true,      // petits sons d'interface
+  ambientMusic: false  // nappe d'ambiance
 };
 
 function loadSettings() {
   try {
-    const raw = JSON.parse(fs.readFileSync(settingsFile(), 'utf8'));
-    return { ...DEFAULT_SETTINGS, ...raw };
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(fs.readFileSync(settingsFile(), 'utf8')) };
   } catch {
     return { ...DEFAULT_SETTINGS };
   }
 }
-
 function saveSettings(partial) {
   const merged = { ...loadSettings(), ...partial };
   fs.mkdirSync(path.dirname(settingsFile()), { recursive: true });
@@ -62,14 +58,30 @@ function saveSettings(partial) {
   return merged;
 }
 
+const DEFAULT_STATS = { playtimeMs: 0, sessions: 0, lastPlayed: null };
+function getStats() {
+  try {
+    return { ...DEFAULT_STATS, ...JSON.parse(fs.readFileSync(statsFile(), 'utf8')) };
+  } catch {
+    return { ...DEFAULT_STATS };
+  }
+}
+function addSession(ms) {
+  const s = getStats();
+  s.playtimeMs += Math.max(0, ms || 0);
+  s.sessions += 1;
+  s.lastPlayed = Date.now();
+  try {
+    fs.mkdirSync(path.dirname(statsFile()), { recursive: true });
+    fs.writeFileSync(statsFile(), JSON.stringify(s, null, 2));
+  } catch { /* non bloquant */ }
+  return s;
+}
+
 module.exports = {
-  pkg,
-  repo,
-  MANIFEST_URL,
-  getGameDir,
-  settingsFile,
-  authFile,
-  DEFAULT_SETTINGS,
-  loadSettings,
-  saveSettings
+  pkg, repo, serverName, discordAppId,
+  MANIFEST_URL, NEWS_URL,
+  getGameDir, settingsFile, authFile, statsFile,
+  DEFAULT_SETTINGS, loadSettings, saveSettings,
+  getStats, addSession
 };

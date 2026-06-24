@@ -31,6 +31,7 @@ async function launchGame({
   authorization,
   manifest,
   settings,
+  quickPlay,
   onStatus,
   onProgress,
   onLog,
@@ -58,6 +59,11 @@ async function launchGame({
       detached: false
     }
   };
+
+  // Connexion directe au serveur (MC 1.20+) : rejoint le monde sans passer par le menu.
+  if (quickPlay && quickPlay.identifier) {
+    options.quickPlay = { type: 'multiplayer', identifier: quickPlay.identifier };
+  }
 
   // Événements MCLC -> remontés vers l'UI.
   launcher.on('progress', (e) => onProgress && onProgress(e));

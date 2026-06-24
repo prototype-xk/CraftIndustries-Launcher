@@ -1,0 +1,14 @@
+[
+  {
+    "tag": "Bienvenue",
+    "title": "Bienvenue sur CraftIndustries !",
+    "date": "2026-06-23",
+    "body": "Le launcher est officiellement en ligne. Connecte-toi avec ton compte Microsoft, clique sur JOUER, et tout s'installe automatiquement : Minecraft, Forge, les mods et les configs.\n\nBon jeu à tous !"
+  },
+  {
+    "tag": "Astuce",
+    "title": "Comment ça marche",
+    "date": "2026-06-23",
+    "body": "À chaque lancement, le launcher vérifie que tu as exactement les bons mods et configs que le serveur. En cas de souci, va dans Paramètres → Forcer la resynchro."
+  }
+]

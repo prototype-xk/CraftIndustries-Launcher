@@ -15,7 +15,8 @@
     "minecraft": "1.20.1",
     "forge": "47.3.0",
     "serverIp": "play.exemple.fr",
-    "serverPort": 25565
+    "serverPort": 25565,
+    "discordAppId": ""
   },
   "scripts": {
     "start": "electron .",
@@ -25,6 +26,7 @@
     "make-manifest": "node scripts/generate-manifest.js"
   },
   "dependencies": {
+    "@xhayper/discord-rpc": "^1.3.4",
     "adm-zip": "^0.5.17",
     "electron-updater": "^6.8.9",
     "minecraft-launcher-core": "^3.18.2",
