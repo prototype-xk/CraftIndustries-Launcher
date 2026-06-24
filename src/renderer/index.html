@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- ===== Splash de démarrage ===== -->
+  <!-- ===== Splash ===== -->
   <div class="splash" id="splash">
     <div class="splash__inner">
       <svg class="splash__gear" viewBox="0 0 24 24" width="74" height="74">
@@ -52,38 +52,33 @@
       <span class="titlebar__name">CraftIndustries <span class="titlebar__sub">Launcher</span></span>
     </div>
     <div class="titlebar__controls">
-      <button id="btn-min" class="winbtn" title="Réduire" aria-label="Réduire">
-        <svg viewBox="0 0 12 12" width="11" height="11"><rect x="2" y="5.4" width="8" height="1.2" fill="currentColor"/></svg>
-      </button>
-      <button id="btn-close" class="winbtn winbtn--close" title="Fermer" aria-label="Fermer">
-        <svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-      </button>
+      <button id="btn-min" class="winbtn" title="Réduire"><svg viewBox="0 0 12 12" width="11" height="11"><rect x="2" y="5.4" width="8" height="1.2" fill="currentColor"/></svg></button>
+      <button id="btn-close" class="winbtn winbtn--close" title="Fermer"><svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
     </div>
   </header>
 
   <div class="shell">
-    <!-- ===== Barre latérale ===== -->
     <aside class="sidebar">
       <nav class="nav">
         <button class="nav__item nav__item--active" data-view="home">
           <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 11.5 12 4l9 7.5M5 10v9h5v-5h4v5h5v-9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
-          <span>Accueil</span>
+          <span data-i18n="nav_home">Accueil</span>
         </button>
         <button class="nav__item" data-view="news">
           <svg viewBox="0 0 24 24" width="20" height="20"><path d="M5 5h14v14H5zM8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
-          <span>Actualités</span>
+          <span data-i18n="nav_news">Actualités</span>
         </button>
         <button class="nav__item" data-view="mods">
           <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 7l8-4 8 4-8 4-8-4Zm0 5 8 4 8-4M4 17l8 4 8-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
-          <span>Mods</span>
+          <span data-i18n="nav_mods">Mods</span>
         </button>
         <button class="nav__item" data-view="screens">
           <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="11" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 18l5-4 3 2 3-3 3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-          <span>Captures</span>
+          <span data-i18n="nav_screens">Captures</span>
         </button>
         <button class="nav__item" data-view="settings">
           <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13a7.6 7.6 0 0 0 0-2l1.8-1.4-2-3.4-2.1.9a7.5 7.5 0 0 0-1.7-1l-.3-2.3H9.9l-.3 2.3a7.5 7.5 0 0 0-1.7 1l-2.1-.9-2 3.4L5.6 11a7.6 7.6 0 0 0 0 2l-1.8 1.4 2 3.4 2.1-.9a7.5 7.5 0 0 0 1.7 1l.3 2.3h4.2l.3-2.3a7.5 7.5 0 0 0 1.7-1l2.1.9 2-3.4L19.4 13Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-          <span>Paramètres</span>
+          <span data-i18n="nav_settings">Paramètres</span>
         </button>
       </nav>
 
@@ -95,15 +90,14 @@
             <div class="account__state" id="acct-state">Hors ligne</div>
           </div>
         </div>
-        <button id="btn-account" class="account__btn" title="Se connecter">Connexion</button>
+        <button id="btn-account" class="account__btn">Connexion</button>
       </div>
     </aside>
 
-    <!-- ===== Contenu ===== -->
     <main class="content" id="content">
       <div class="banner hidden" id="banner"><span id="banner-text"></span></div>
 
-      <!-- ---- Accueil ---- -->
+      <!-- Accueil -->
       <section class="view view--active" id="view-home">
         <div class="hero">
           <div class="hero__bg"></div>
@@ -114,18 +108,18 @@
               <div class="hero__eyebrow"><span class="dot" id="srv-dot"></span><span id="srv-state">Serveur moddé</span></div>
               <h1 class="hero__title" id="home-title">CraftIndustries</h1>
               <div class="chips">
-                <span class="chip" id="chip-mc"><span class="chip__k">Minecraft</span><span class="chip__v">—</span></span>
-                <span class="chip" id="chip-forge"><span class="chip__k">Forge</span><span class="chip__v">—</span></span>
-                <span class="chip" id="chip-mods"><span class="chip__k">Mods</span><span class="chip__v">—</span></span>
+                <span class="chip" id="chip-mc"><span class="chip__k" data-i18n="chip_mc">Minecraft</span><span class="chip__v">—</span></span>
+                <span class="chip" id="chip-forge"><span class="chip__k" data-i18n="chip_forge">Forge</span><span class="chip__v">—</span></span>
+                <span class="chip" id="chip-mods"><span class="chip__k" data-i18n="chip_mods">Mods</span><span class="chip__v">—</span></span>
               </div>
               <div class="hero__meta">
-                <span class="hero__server" id="home-server">Adresse : —</span>
+                <span class="hero__server" id="home-server">—</span>
                 <span class="hero__sep">•</span>
-                <span class="hero__server">Temps de jeu : <strong id="stat-playtime">—</strong></span>
+                <span class="hero__server"><span data-i18n="playtime">Temps de jeu</span> : <strong id="stat-playtime">—</strong></span>
                 <span class="hero__sep">•</span>
-                <button class="hero__trophy" id="btn-achievements" title="Voir les succès">
+                <button class="hero__trophy" id="btn-achievements">
                   <svg viewBox="0 0 24 24" width="14" height="14"><path d="M7 4h10v3a5 5 0 0 1-10 0V4Z M7 5H4v2a3 3 0 0 0 3 3 M17 5h3v2a3 3 0 0 1-3 3 M9.5 14h5l-.7 3h-3.6z M8 20h8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-                  <span id="ach-count">0</span> succès
+                  <span id="ach-count">0</span>&nbsp;<span data-i18n="achievements">succès</span>
                 </button>
               </div>
             </div>
@@ -134,94 +128,87 @@
         </div>
 
         <div class="launchbar">
-          <button id="btn-console" class="iconbtn" title="Console">
-            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 5h14v14H5zM8 10l3 2-3 2m5 0h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
+          <button id="btn-console" class="iconbtn" title="Console"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 5h14v14H5zM8 10l3 2-3 2m5 0h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <div class="launchbar__info">
             <div class="launchbar__status" id="status">Prêt.</div>
             <div class="progress"><div class="progress__bar" id="progress-bar"></div></div>
           </div>
           <button id="btn-play" class="btn-play" disabled>
-            <span class="btn-play__label">JOUER</span>
+            <span class="btn-play__label" data-i18n="play">JOUER</span>
             <span class="btn-play__sub" id="btn-play-sub">Connecte-toi d'abord</span>
           </button>
         </div>
 
         <div class="console hidden" id="console">
-          <div class="console__head"><span>Console</span><button id="btn-console-clear" class="link">Vider</button></div>
+          <div class="console__head"><span data-i18n="console">Console</span><button id="btn-console-clear" class="link" data-i18n="clear">Vider</button></div>
           <pre class="console__body" id="console-body"></pre>
         </div>
       </section>
 
-      <!-- ---- Actualités ---- -->
+      <!-- Actualités -->
       <section class="view" id="view-news">
         <div class="page">
           <div class="page__head">
-            <div><h2 class="page__title">Actualités</h2><p class="page__sub">Annonces du serveur</p></div>
-            <button id="btn-news-refresh" class="btn btn--ghost btn--sm">Actualiser</button>
+            <div><h2 class="page__title" data-i18n="news_title">Actualités</h2><p class="page__sub" data-i18n="news_sub">Annonces du serveur</p></div>
+            <button id="btn-news-refresh" class="btn btn--ghost btn--sm" data-i18n="refresh">Actualiser</button>
           </div>
           <div class="newslist" id="news-list"></div>
           <div class="empty" id="news-empty">
             <svg viewBox="0 0 24 24" width="42" height="42"><path d="M5 5h14v14H5zM8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
-            <p>Aucune actualité pour l'instant.</p>
-            <span>Les annonces publiées dans <code>news.json</code> apparaîtront ici.</span>
+            <p data-i18n="news_empty">Aucune actualité pour l'instant.</p>
+            <span data-i18n="news_empty2">Les annonces publiées dans news.json apparaîtront ici.</span>
           </div>
         </div>
       </section>
 
-      <!-- ---- Mods ---- -->
+      <!-- Mods -->
       <section class="view" id="view-mods">
         <div class="page">
           <div class="page__head">
-            <div><h2 class="page__title">Mods du modpack</h2><p class="page__sub">Synchronisés depuis GitHub</p></div>
+            <div><h2 class="page__title" data-i18n="mods_title">Mods du modpack</h2><p class="page__sub" data-i18n="mods_sub">Synchronisés depuis GitHub</p></div>
             <div class="page__actions">
-              <button id="btn-changelog" class="btn btn--ghost btn--sm hidden">Quoi de neuf</button>
+              <button id="btn-changelog" class="btn btn--ghost btn--sm hidden" data-i18n="whatsnew">Quoi de neuf</button>
               <span class="badge" id="mods-count">0 mods</span>
             </div>
           </div>
           <div class="card overrides-card hidden" id="overrides-card">
-            <div class="modrow__icon">
-              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 4h11l3 3v13H5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 11h8M8 15h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            </div>
-            <div class="overrides-card__text">
-              <div class="card__label">Configs, scripts &amp; ressources</div>
-              <div class="muted">KubeJS, config, defaultconfigs… appliqués automatiquement</div>
-            </div>
+            <div class="modrow__icon"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 4h11l3 3v13H5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 11h8M8 15h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+            <div class="overrides-card__text"><div class="card__label" data-i18n="overrides_title">Configs, scripts &amp; ressources</div><div class="muted" data-i18n="overrides_sub">KubeJS, config, defaultconfigs… appliqués automatiquement</div></div>
             <span class="modrow__size" id="overrides-size"></span>
           </div>
           <div class="modlist" id="mods-list"></div>
           <div class="empty" id="mods-empty">
             <svg viewBox="0 0 24 24" width="42" height="42"><path d="M4 7l8-4 8 4-8 4-8-4Zm0 5 8 4 8-4M4 17l8 4 8-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
-            <p>Aucun mod dans le manifeste pour l'instant.</p>
-            <span>Ajoute des <code>.jar</code> puis publie le manifeste sur GitHub.</span>
+            <p data-i18n="mods_empty">Aucun mod dans le manifeste pour l'instant.</p>
+            <span data-i18n="mods_empty2">Ajoute des .jar puis publie le manifeste sur GitHub.</span>
           </div>
         </div>
       </section>
 
-      <!-- ---- Captures ---- -->
+      <!-- Captures -->
       <section class="view" id="view-screens">
         <div class="page">
           <div class="page__head">
-            <div><h2 class="page__title">Captures</h2><p class="page__sub">Tes screenshots en jeu</p></div>
-            <button id="btn-screens-folder" class="btn btn--ghost btn--sm">Ouvrir le dossier</button>
+            <div><h2 class="page__title" data-i18n="screens_title">Captures</h2><p class="page__sub" data-i18n="screens_sub">Tes screenshots en jeu</p></div>
+            <button id="btn-screens-folder" class="btn btn--ghost btn--sm" data-i18n="open_folder">Ouvrir le dossier</button>
           </div>
           <div class="grid" id="screens-grid"></div>
           <div class="empty" id="screens-empty">
             <svg viewBox="0 0 24 24" width="42" height="42"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 18l5-4 3 2 3-3 3 3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-            <p>Aucune capture pour l'instant.</p>
-            <span>Appuie sur <code>F2</code> en jeu pour prendre un screenshot.</span>
+            <p data-i18n="screens_empty">Aucune capture pour l'instant.</p>
+            <span data-i18n="screens_empty2">Appuie sur F2 en jeu pour prendre un screenshot.</span>
           </div>
         </div>
       </section>
 
-      <!-- ---- Paramètres ---- -->
+      <!-- Paramètres -->
       <section class="view" id="view-settings">
         <div class="page">
-          <div class="page__head"><div><h2 class="page__title">Paramètres</h2><p class="page__sub">Configuration du jeu et du launcher</p></div></div>
+          <div class="page__head"><div><h2 class="page__title" data-i18n="settings_title">Paramètres</h2><p class="page__sub" data-i18n="settings_sub">Configuration du jeu et du launcher</p></div></div>
 
           <div class="card">
             <div class="card__row card__row--col">
-              <div class="field__top"><label for="set-ram">Mémoire allouée</label><span class="field__val"><strong id="set-ram-val">4</strong> Go</span></div>
+              <div class="field__top"><label for="set-ram" data-i18n="ram">Mémoire allouée</label><span class="field__val"><strong id="set-ram-val">4</strong>&nbsp;<span data-i18n="go">Go</span></span></div>
               <input type="range" id="set-ram" min="2" max="16" step="1" value="4" />
               <p class="hint" id="ram-hint">Recommandé : 4–6 Go pour un modpack Forge.</p>
             </div>
@@ -229,18 +216,26 @@
 
           <div class="card">
             <div class="card__row card__row--col">
-              <label for="set-java">Chemin Java <span class="muted">(vide = détection automatique)</span></label>
+              <label for="set-java"><span data-i18n="java">Chemin Java</span> <span class="muted" data-i18n="java_auto">(vide = détection automatique)</span></label>
               <input type="text" id="set-java" placeholder="C:\Program Files\Eclipse Adoptium\...\bin\javaw.exe" />
-              <p class="hint">Minecraft 1.20.1 nécessite Java 17 ou supérieur.</p>
+              <p class="hint" data-i18n="java_hint">Minecraft 1.20.1 nécessite Java 17 ou supérieur.</p>
             </div>
             <div class="card__sep"></div>
-            <label class="toggle"><input type="checkbox" id="set-direct" /><span class="toggle__track"><span class="toggle__thumb"></span></span><span class="toggle__label">Rejoindre directement le serveur au lancement</span></label>
+            <label class="toggle"><input type="checkbox" id="set-direct" /><span class="toggle__track"><span class="toggle__thumb"></span></span><span class="toggle__label" data-i18n="direct">Rejoindre directement le serveur au lancement</span></label>
             <div style="height:12px"></div>
-            <label class="toggle"><input type="checkbox" id="set-keep" /><span class="toggle__track"><span class="toggle__thumb"></span></span><span class="toggle__label">Garder le launcher ouvert pendant le jeu</span></label>
+            <label class="toggle"><input type="checkbox" id="set-keep" /><span class="toggle__track"><span class="toggle__thumb"></span></span><span class="toggle__label" data-i18n="keep">Garder le launcher ouvert pendant le jeu</span></label>
           </div>
 
           <div class="card">
-            <div class="card__label" style="margin-bottom:14px">Thème d'accent</div>
+            <div class="card__label" style="margin-bottom:14px" data-i18n="lang">Langue</div>
+            <div class="langsel" id="langsel">
+              <button class="langbtn" data-lang="fr"><span class="langbtn__flag">🇫🇷</span> Français</button>
+              <button class="langbtn" data-lang="en"><span class="langbtn__flag">🇬🇧</span> English</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__label" style="margin-bottom:14px" data-i18n="theme">Thème d'accent</div>
             <div class="themes" id="themes">
               <button class="swatch" data-theme="cyan" style="--sw:#29c6e8" title="Cyan"></button>
               <button class="swatch" data-theme="green" style="--sw:#46d37b" title="Vert"></button>
@@ -251,31 +246,31 @@
           </div>
 
           <div class="card">
-            <label class="toggle"><input type="checkbox" id="set-sounds" /><span class="toggle__track"><span class="toggle__thumb"></span></span><span class="toggle__label">Sons d'interface</span></label>
+            <label class="toggle"><input type="checkbox" id="set-sounds" /><span class="toggle__track"><span class="toggle__thumb"></span></span><span class="toggle__label" data-i18n="sounds">Sons d'interface</span></label>
             <div style="height:12px"></div>
-            <label class="toggle"><input type="checkbox" id="set-ambient" /><span class="toggle__track"><span class="toggle__thumb"></span></span><span class="toggle__label">Musique d'ambiance</span></label>
+            <label class="toggle"><input type="checkbox" id="set-ambient" /><span class="toggle__track"><span class="toggle__thumb"></span></span><span class="toggle__label" data-i18n="ambient">Musique d'ambiance</span></label>
           </div>
 
           <div class="card">
             <div class="card__row">
-              <div><div class="card__label">Dossier de jeu</div><div class="card__path" id="set-gamedir">—</div></div>
-              <button id="btn-opendir" class="btn btn--ghost">Ouvrir</button>
+              <div><div class="card__label" data-i18n="gamedir">Dossier de jeu</div><div class="card__path" id="set-gamedir">—</div></div>
+              <button id="btn-opendir" class="btn btn--ghost" data-i18n="open">Ouvrir</button>
             </div>
             <div class="card__sep"></div>
             <div class="card__row">
-              <div><div class="card__label">Réparer l'installation</div><div class="muted">Re-télécharge mods et configs au prochain lancement</div></div>
-              <button id="btn-repair" class="btn btn--ghost">Forcer la resynchro</button>
+              <div><div class="card__label" data-i18n="repair">Réparer l'installation</div><div class="muted" data-i18n="repair_sub">Re-télécharge mods et configs au prochain lancement</div></div>
+              <button id="btn-repair" class="btn btn--ghost" data-i18n="repair_btn">Forcer la resynchro</button>
             </div>
           </div>
 
           <div class="settings__foot">
-            <div class="about"><span id="about-version">CraftIndustries Launcher</span><button id="btn-github" class="link">Dépôt GitHub ↗</button></div>
-            <div class="settings__actions"><span class="saved hidden" id="set-saved">Enregistré ✓</span><button id="btn-save" class="btn btn--primary">Enregistrer</button></div>
+            <div class="about"><span id="about-version">CraftIndustries Launcher</span><button id="btn-github" class="link" data-i18n="repo">Dépôt GitHub ↗</button></div>
+            <div class="settings__actions"><span class="saved hidden" id="set-saved" data-i18n="saved">Enregistré ✓</span><button id="btn-save" class="btn btn--primary" data-i18n="save">Enregistrer</button></div>
           </div>
         </div>
       </section>
 
-      <!-- Overlay de chargement -->
+      <!-- Overlay -->
       <div class="overlay hidden" id="overlay">
         <div class="overlay__box">
           <svg class="overlay__gear" viewBox="0 0 24 24" width="64" height="64">
@@ -295,32 +290,28 @@
           <div class="overlay__status" id="overlay-status">Préparation…</div>
           <div class="overlay__progress"><div class="overlay__bar" id="overlay-bar"></div></div>
           <div class="overlay__pct" id="overlay-pct">0%</div>
-          <button class="link" id="overlay-console">Afficher la console</button>
+          <button class="link" id="overlay-console" data-i18n="show_console">Afficher la console</button>
           <pre class="overlay__log hidden" id="overlay-log"></pre>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- Bandeau de mise à jour -->
   <div id="update-toast" class="toast hidden">
     <span id="update-text"></span>
-    <button id="btn-update" class="btn btn--primary btn--sm hidden">Redémarrer</button>
+    <button id="btn-update" class="btn btn--primary btn--sm hidden" data-i18n="restart">Redémarrer</button>
   </div>
 
-  <!-- Fenêtre de crash -->
+  <!-- Crash -->
   <div class="modal hidden" id="crash-modal">
     <div class="modal__box">
-      <div class="modal__head">
-        <span class="modal__title">⚠ Minecraft a planté</span>
-        <button class="winbtn" id="crash-x"><svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
-      </div>
-      <p class="modal__desc">Le rapport de crash ci-dessous peut aider à identifier le mod ou le réglage en cause.</p>
+      <div class="modal__head"><span class="modal__title" data-i18n="crash_title">⚠ Minecraft a planté</span><button class="winbtn" id="crash-x"><svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button></div>
+      <p class="modal__desc" data-i18n="crash_desc">Le rapport de crash ci-dessous peut aider à identifier le mod ou le réglage en cause.</p>
       <pre class="crashlog" id="crash-log"></pre>
       <div class="modal__actions">
-        <button class="btn btn--ghost" id="crash-open">Ouvrir le dossier</button>
-        <button class="btn btn--ghost" id="crash-copy">Copier</button>
-        <button class="btn btn--primary" id="crash-dismiss">Fermer</button>
+        <button class="btn btn--ghost" id="crash-open" data-i18n="open_dir">Ouvrir le dossier</button>
+        <button class="btn btn--ghost" id="crash-copy" data-i18n="copy">Copier</button>
+        <button class="btn btn--primary" id="crash-dismiss" data-i18n="close">Fermer</button>
       </div>
     </div>
   </div>
@@ -328,7 +319,7 @@
   <!-- Succès -->
   <div class="modal hidden" id="ach-modal">
     <div class="modal__box">
-      <div class="modal__head"><span class="modal__title modal__title--ok">🏆 Succès</span><button class="winbtn" id="ach-x"><svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button></div>
+      <div class="modal__head"><span class="modal__title modal__title--ok" data-i18n="ach_title">🏆 Succès</span><button class="winbtn" id="ach-x"><svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button></div>
       <div class="achgrid" id="ach-grid"></div>
     </div>
   </div>
@@ -336,7 +327,7 @@
   <!-- Quoi de neuf -->
   <div class="modal hidden" id="cl-modal">
     <div class="modal__box">
-      <div class="modal__head"><span class="modal__title modal__title--ok">✨ Quoi de neuf</span><button class="winbtn" id="cl-x"><svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button></div>
+      <div class="modal__head"><span class="modal__title modal__title--ok" data-i18n="cl_title">✨ Quoi de neuf</span><button class="winbtn" id="cl-x"><svg viewBox="0 0 12 12" width="11" height="11"><path d="M2.6 2.6l6.8 6.8M9.4 2.6l-6.8 6.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button></div>
       <div class="changelog" id="cl-body"></div>
     </div>
   </div>
@@ -344,18 +335,45 @@
   <!-- Toast succès -->
   <div class="ach-toast hidden" id="ach-toast">
     <span class="ach-toast__icon" id="ach-toast-icon">🏆</span>
-    <div><div class="ach-toast__t">Succès débloqué</div><div class="ach-toast__d" id="ach-toast-name"></div></div>
+    <div><div class="ach-toast__t" data-i18n="ach_unlocked">Succès débloqué</div><div class="ach-toast__d" id="ach-toast-name"></div></div>
   </div>
 
-  <!-- Visionneuse de capture -->
+  <!-- Lightbox -->
   <div class="lightbox hidden" id="lightbox">
     <div class="lightbox__bar">
-      <button class="btn btn--sm" id="lb-copy">Copier</button>
-      <button class="btn btn--sm hidden" id="lb-share">Partager Discord</button>
-      <button class="btn btn--sm" id="lb-open">Ouvrir</button>
-      <button class="btn btn--sm btn--primary" id="lb-close">Fermer</button>
+      <button class="btn btn--sm" id="lb-copy" data-i18n="copy">Copier</button>
+      <button class="btn btn--sm hidden" id="lb-share" data-i18n="share">Partager Discord</button>
+      <button class="btn btn--sm" id="lb-open" data-i18n="open">Ouvrir</button>
+      <button class="btn btn--sm btn--primary" id="lb-close" data-i18n="close">Fermer</button>
     </div>
     <img id="lightbox-img" alt="" />
+  </div>
+
+  <!-- Assistant de bienvenue -->
+  <div class="onboard hidden" id="onboard">
+    <div class="onboard__box">
+      <svg class="onboard__gear" viewBox="0 0 24 24" width="64" height="64">
+        <g fill="currentColor">
+          <rect x="10.7" y="0.8" width="2.6" height="5.6" rx="0.8" transform="rotate(0 12 12)"/>
+          <rect x="10.7" y="0.8" width="2.6" height="5.6" rx="0.8" transform="rotate(45 12 12)"/>
+          <rect x="10.7" y="0.8" width="2.6" height="5.6" rx="0.8" transform="rotate(90 12 12)"/>
+          <rect x="10.7" y="0.8" width="2.6" height="5.6" rx="0.8" transform="rotate(135 12 12)"/>
+          <rect x="10.7" y="0.8" width="2.6" height="5.6" rx="0.8" transform="rotate(180 12 12)"/>
+          <rect x="10.7" y="0.8" width="2.6" height="5.6" rx="0.8" transform="rotate(225 12 12)"/>
+          <rect x="10.7" y="0.8" width="2.6" height="5.6" rx="0.8" transform="rotate(270 12 12)"/>
+          <rect x="10.7" y="0.8" width="2.6" height="5.6" rx="0.8" transform="rotate(315 12 12)"/>
+          <circle cx="12" cy="12" r="6.6"/>
+        </g>
+        <circle cx="12" cy="12" r="2.8" class="onboard__gear-hole"/>
+      </svg>
+      <h2 class="onboard__title" id="ob-title">Bienvenue</h2>
+      <p class="onboard__text" id="ob-text"></p>
+      <div class="onboard__dots" id="ob-dots"></div>
+      <div class="onboard__actions">
+        <button class="btn btn--ghost" id="ob-skip">Passer</button>
+        <button class="btn btn--primary" id="ob-next">Suivant</button>
+      </div>
+    </div>
   </div>
 
   <script src="renderer.js"></script>

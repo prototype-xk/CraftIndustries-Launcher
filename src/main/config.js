@@ -43,7 +43,9 @@ const DEFAULT_SETTINGS = {
   directJoin: true,
   uiSounds: true,
   ambientMusic: false,
-  theme: 'cyan'
+  theme: 'cyan',
+  lang: 'fr',
+  onboarded: false
 };
 
 function loadSettings() {

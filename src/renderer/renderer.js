@@ -2,7 +2,6 @@
 
 /* global window, document, navigator, AudioContext */
 
-// IIFE : évite le conflit entre `const api` et la globale non-configurable window.api.
 (function () {
 const api = window.api;
 const $ = (id) => document.getElementById(id);
@@ -10,61 +9,110 @@ const $ = (id) => document.getElementById(id);
 const el = {
   splash: $('splash'),
   btnMin: $('btn-min'), btnClose: $('btn-close'),
-  account: $('account'), acctAvatar: $('acct-avatar'), acctName: $('acct-name'),
-  acctState: $('acct-state'), btnAccount: $('btn-account'),
+  account: $('account'), acctAvatar: $('acct-avatar'), acctName: $('acct-name'), acctState: $('acct-state'), btnAccount: $('btn-account'),
   content: $('content'), banner: $('banner'), bannerText: $('banner-text'),
-  homeTitle: $('home-title'), chipMc: $('chip-mc'), chipForge: $('chip-forge'),
-  chipMods: $('chip-mods'), homeServer: $('home-server'), heroAvatar: $('hero-avatar'),
-  srvDot: $('srv-dot'), srvState: $('srv-state'), statPlaytime: $('stat-playtime'),
+  homeTitle: $('home-title'), chipMc: $('chip-mc'), chipForge: $('chip-forge'), chipMods: $('chip-mods'),
+  homeServer: $('home-server'), heroAvatar: $('hero-avatar'), srvDot: $('srv-dot'), srvState: $('srv-state'), statPlaytime: $('stat-playtime'),
   btnAch: $('btn-achievements'), achCount: $('ach-count'),
-  status: $('status'), progressBar: $('progress-bar'), btnPlay: $('btn-play'),
-  btnPlaySub: $('btn-play-sub'), btnConsole: $('btn-console'),
+  status: $('status'), progressBar: $('progress-bar'), btnPlay: $('btn-play'), btnPlaySub: $('btn-play-sub'), btnConsole: $('btn-console'),
   console: $('console'), consoleBody: $('console-body'), btnConsoleClear: $('btn-console-clear'),
-  overlay: $('overlay'), overlayStatus: $('overlay-status'), overlayBar: $('overlay-bar'),
-  overlayPct: $('overlay-pct'), overlayConsole: $('overlay-console'), overlayLog: $('overlay-log'),
+  overlay: $('overlay'), overlayStatus: $('overlay-status'), overlayBar: $('overlay-bar'), overlayPct: $('overlay-pct'), overlayConsole: $('overlay-console'), overlayLog: $('overlay-log'),
   newsList: $('news-list'), newsEmpty: $('news-empty'), btnNewsRefresh: $('btn-news-refresh'),
-  modsList: $('mods-list'), modsEmpty: $('mods-empty'), modsCount: $('mods-count'),
-  overridesCard: $('overrides-card'), overridesSize: $('overrides-size'), btnChangelog: $('btn-changelog'),
+  modsList: $('mods-list'), modsEmpty: $('mods-empty'), modsCount: $('mods-count'), overridesCard: $('overrides-card'), overridesSize: $('overrides-size'), btnChangelog: $('btn-changelog'),
   screensGrid: $('screens-grid'), screensEmpty: $('screens-empty'), btnScreensFolder: $('btn-screens-folder'),
-  lightbox: $('lightbox'), lightboxImg: $('lightbox-img'),
-  lbCopy: $('lb-copy'), lbShare: $('lb-share'), lbOpen: $('lb-open'), lbClose: $('lb-close'),
-  crashModal: $('crash-modal'), crashLog: $('crash-log'), crashOpen: $('crash-open'),
-  crashCopy: $('crash-copy'), crashDismiss: $('crash-dismiss'), crashX: $('crash-x'),
+  lightbox: $('lightbox'), lightboxImg: $('lightbox-img'), lbCopy: $('lb-copy'), lbShare: $('lb-share'), lbOpen: $('lb-open'), lbClose: $('lb-close'),
+  crashModal: $('crash-modal'), crashLog: $('crash-log'), crashOpen: $('crash-open'), crashCopy: $('crash-copy'), crashDismiss: $('crash-dismiss'), crashX: $('crash-x'),
   achModal: $('ach-modal'), achGrid: $('ach-grid'), achX: $('ach-x'),
   achToast: $('ach-toast'), achToastIcon: $('ach-toast-icon'), achToastName: $('ach-toast-name'),
   clModal: $('cl-modal'), clBody: $('cl-body'), clX: $('cl-x'),
-  themes: $('themes'), ramHint: $('ram-hint'),
-  setRam: $('set-ram'), setRamVal: $('set-ram-val'), setJava: $('set-java'),
-  setKeep: $('set-keep'), setDirect: $('set-direct'), setSounds: $('set-sounds'),
-  setAmbient: $('set-ambient'), setGamedir: $('set-gamedir'), btnOpendir: $('btn-opendir'),
-  btnRepair: $('btn-repair'), btnSave: $('btn-save'), setSaved: $('set-saved'),
-  aboutVersion: $('about-version'), btnGithub: $('btn-github')
+  ramHint: $('ram-hint'),
+  setRam: $('set-ram'), setRamVal: $('set-ram-val'), setJava: $('set-java'), setKeep: $('set-keep'), setDirect: $('set-direct'),
+  setSounds: $('set-sounds'), setAmbient: $('set-ambient'), setGamedir: $('set-gamedir'), btnOpendir: $('btn-opendir'),
+  btnRepair: $('btn-repair'), btnSave: $('btn-save'), setSaved: $('set-saved'), aboutVersion: $('about-version'), btnGithub: $('btn-github'),
+  onboard: $('onboard'), obTitle: $('ob-title'), obText: $('ob-text'), obDots: $('ob-dots'), obSkip: $('ob-skip'), obNext: $('ob-next')
 };
+
+/* ================= i18n ================= */
+const I18N = {
+  fr: {
+    nav_home: 'Accueil', nav_news: 'Actualités', nav_mods: 'Mods', nav_screens: 'Captures', nav_settings: 'Paramètres',
+    acct_disconnected: 'Non connecté', acct_offline: 'Hors ligne', acct_connected: 'Connecté', acct_login: 'Connexion', acct_logout: 'Quitter',
+    srv_modded: 'Serveur moddé', srv_checking: 'Vérification…', srv_online: 'Serveur en ligne', srv_offline: 'Serveur hors ligne',
+    chip_mc: 'Minecraft', chip_forge: 'Forge', chip_mods: 'Mods',
+    addr: 'Adresse', addr_none: 'non configurée', playtime: 'Temps de jeu', achievements: 'succès',
+    play: 'JOUER', play_login: "Connecte-toi d'abord", play_ready: 'Prêt à jouer', play_busy: 'Lancement en cours…', play_maint: 'Maintenance',
+    console: 'Console', clear: 'Vider', show_console: 'Afficher la console', hide_console: 'Masquer la console',
+    news_title: 'Actualités', news_sub: 'Annonces du serveur', refresh: 'Actualiser', news_empty: "Aucune actualité pour l'instant.", news_empty2: 'Les annonces publiées dans news.json apparaîtront ici.',
+    mods_title: 'Mods du modpack', mods_sub: 'Synchronisés depuis GitHub', whatsnew: 'Quoi de neuf', overrides_title: 'Configs, scripts & ressources', overrides_sub: 'KubeJS, config, defaultconfigs… appliqués automatiquement', mods_empty: "Aucun mod dans le manifeste pour l'instant.", mods_empty2: 'Ajoute des .jar puis publie le manifeste sur GitHub.',
+    screens_title: 'Captures', screens_sub: 'Tes screenshots en jeu', open_folder: 'Ouvrir le dossier', screens_empty: "Aucune capture pour l'instant.", screens_empty2: 'Appuie sur F2 en jeu pour prendre un screenshot.',
+    settings_title: 'Paramètres', settings_sub: 'Configuration du jeu et du launcher', ram: 'Mémoire allouée', go: 'Go', java: 'Chemin Java', java_auto: '(vide = détection automatique)', java_hint: 'Minecraft 1.20.1 nécessite Java 17 ou supérieur.', direct: 'Rejoindre directement le serveur au lancement', keep: 'Garder le launcher ouvert pendant le jeu', lang: 'Langue', theme: "Thème d'accent", sounds: "Sons d'interface", ambient: "Musique d'ambiance", gamedir: 'Dossier de jeu', open: 'Ouvrir', repair: "Réparer l'installation", repair_sub: 'Re-télécharge mods et configs au prochain lancement', repair_btn: 'Forcer la resynchro', repo: 'Dépôt GitHub ↗', saved: 'Enregistré ✓', save: 'Enregistrer',
+    restart: 'Redémarrer', crash_title: '⚠ Minecraft a planté', crash_desc: 'Le rapport de crash ci-dessous peut aider à identifier le mod ou le réglage en cause.', open_dir: 'Ouvrir le dossier', copy: 'Copier', close: 'Fermer',
+    ach_title: '🏆 Succès', cl_title: '✨ Quoi de neuf', ach_unlocked: 'Succès débloqué', share: 'Partager Discord',
+    ready: 'Prêt.', connect_to_play: 'Connecte-toi pour jouer.', connecting: 'Connexion à Microsoft…', auto_connect: 'Connexion automatique…', disconnected: 'Déconnecté.', welcome: 'Bienvenue', login_fail: 'Échec de la connexion : ', init: 'Initialisation…', error: 'Erreur : ', repaired: 'Installation réinitialisée — tout sera re-synchronisé au prochain lancement.',
+    ob_skip: 'Passer', ob_next: 'Suivant', ob_start: 'Commencer',
+    ob_t1: 'Bienvenue sur CraftIndustries', ob_x1: 'Connecte-toi avec ton compte Microsoft (bouton en bas à gauche) pour jouer.',
+    ob_t2: 'Règle ta mémoire', ob_x2: 'Dans Paramètres, ajuste la RAM (4–6 Go conseillé) et choisis ton thème.',
+    ob_t3: 'Prêt à jouer', ob_x3: 'Clique sur JOUER : le launcher installe Minecraft, Forge, les mods et les configs automatiquement. Bon jeu !'
+  },
+  en: {
+    nav_home: 'Home', nav_news: 'News', nav_mods: 'Mods', nav_screens: 'Screenshots', nav_settings: 'Settings',
+    acct_disconnected: 'Not signed in', acct_offline: 'Offline', acct_connected: 'Signed in', acct_login: 'Sign in', acct_logout: 'Sign out',
+    srv_modded: 'Modded server', srv_checking: 'Checking…', srv_online: 'Server online', srv_offline: 'Server offline',
+    chip_mc: 'Minecraft', chip_forge: 'Forge', chip_mods: 'Mods',
+    addr: 'Address', addr_none: 'not set', playtime: 'Playtime', achievements: 'achievements',
+    play: 'PLAY', play_login: 'Sign in first', play_ready: 'Ready to play', play_busy: 'Launching…', play_maint: 'Maintenance',
+    console: 'Console', clear: 'Clear', show_console: 'Show console', hide_console: 'Hide console',
+    news_title: 'News', news_sub: 'Server announcements', refresh: 'Refresh', news_empty: 'No news yet.', news_empty2: 'Announcements posted in news.json will appear here.',
+    mods_title: 'Modpack mods', mods_sub: 'Synced from GitHub', whatsnew: "What's new", overrides_title: 'Configs, scripts & resources', overrides_sub: 'KubeJS, config, defaultconfigs… applied automatically', mods_empty: 'No mods in the manifest yet.', mods_empty2: 'Add .jar files then publish the manifest on GitHub.',
+    screens_title: 'Screenshots', screens_sub: 'Your in-game screenshots', open_folder: 'Open folder', screens_empty: 'No screenshots yet.', screens_empty2: 'Press F2 in-game to take a screenshot.',
+    settings_title: 'Settings', settings_sub: 'Game and launcher configuration', ram: 'Allocated memory', go: 'GB', java: 'Java path', java_auto: '(empty = auto-detect)', java_hint: 'Minecraft 1.20.1 requires Java 17 or newer.', direct: 'Join the server directly on launch', keep: 'Keep the launcher open while playing', lang: 'Language', theme: 'Accent theme', sounds: 'Interface sounds', ambient: 'Ambient music', gamedir: 'Game folder', open: 'Open', repair: 'Repair installation', repair_sub: 'Re-downloads mods and configs on next launch', repair_btn: 'Force resync', repo: 'GitHub repo ↗', saved: 'Saved ✓', save: 'Save',
+    restart: 'Restart', crash_title: '⚠ Minecraft crashed', crash_desc: 'The crash report below can help identify the mod or setting at fault.', open_dir: 'Open folder', copy: 'Copy', close: 'Close',
+    ach_title: '🏆 Achievements', cl_title: "✨ What's new", ach_unlocked: 'Achievement unlocked', share: 'Share to Discord',
+    ready: 'Ready.', connect_to_play: 'Sign in to play.', connecting: 'Connecting to Microsoft…', auto_connect: 'Auto sign-in…', disconnected: 'Signed out.', welcome: 'Welcome', login_fail: 'Sign-in failed: ', init: 'Initializing…', error: 'Error: ', repaired: 'Installation reset — everything will re-sync next launch.',
+    ob_skip: 'Skip', ob_next: 'Next', ob_start: 'Get started',
+    ob_t1: 'Welcome to CraftIndustries', ob_x1: 'Sign in with your Microsoft account (button at the bottom left) to play.',
+    ob_t2: 'Set your memory', ob_x2: 'In Settings, adjust the RAM (4–6 GB recommended) and pick your theme.',
+    ob_t3: 'Ready to play', ob_x3: 'Click PLAY: the launcher installs Minecraft, Forge, mods and configs automatically. Have fun!'
+  }
+};
+let curLang = 'fr';
+function t(k) { return (I18N[curLang] && I18N[curLang][k]) || I18N.fr[k] || k; }
+function applyLang(lang) {
+  curLang = I18N[lang] ? lang : 'fr';
+  const dict = I18N[curLang];
+  document.querySelectorAll('[data-i18n]').forEach((e) => { const v = dict[e.dataset.i18n]; if (v != null) e.textContent = v; });
+  document.querySelectorAll('.langbtn').forEach((b) => b.classList.toggle('is-active', b.dataset.lang === curLang));
+  renderAccount(); renderServer(); updatePlayButton(); renderOnboard(); setRamHint();
+  el.overlayConsole.textContent = el.overlayLog.classList.contains('hidden') ? t('show_console') : t('hide_console');
+}
 
 let connected = false, busy = false, maintenance = false;
 let repoUrl = null, serverTarget = null, gameDir = '';
 let crashFile = '', currentShot = '', changelogData = null, hasWebhook = false;
-let theme = 'cyan';
-let particleRGB = '41,198,232';
+let theme = 'cyan', profileName = null, serverOnline = null, particleRGB = '41,198,232', totalRamGB = 0;
+function setRamHint() {
+  if (!totalRamGB) return;
+  const rec = Math.min(8, Math.max(4, Math.floor(totalRamGB / 2)));
+  el.ramHint.textContent = curLang === 'en' ? `Detected RAM: ${totalRamGB} GB · recommended: ${rec} GB.` : `RAM détectée : ${totalRamGB} Go · recommandé : ${rec} Go.`;
+}
 
 /* ================= Thèmes ================= */
 const THEMES = {
-  cyan:   { a: '#29c6e8', a2: '#18a6c9', ink: '#03161d', glow: 'rgba(41,198,232,.35)', rgb: '41,198,232' },
-  green:  { a: '#46d37b', a2: '#38c06c', ink: '#04150b', glow: 'rgba(70,211,123,.35)', rgb: '70,211,123' },
+  cyan: { a: '#29c6e8', a2: '#18a6c9', ink: '#03161d', glow: 'rgba(41,198,232,.35)', rgb: '41,198,232' },
+  green: { a: '#46d37b', a2: '#38c06c', ink: '#04150b', glow: 'rgba(70,211,123,.35)', rgb: '70,211,123' },
   orange: { a: '#f0962a', a2: '#d97d12', ink: '#1c1003', glow: 'rgba(240,150,42,.35)', rgb: '240,150,42' },
   violet: { a: '#a06cf0', a2: '#8a52e0', ink: '#140a22', glow: 'rgba(160,108,240,.35)', rgb: '160,108,240' },
-  red:    { a: '#ef5d7a', a2: '#db4666', ink: '#1c0610', glow: 'rgba(239,93,122,.35)', rgb: '239,93,122' }
+  red: { a: '#ef5d7a', a2: '#db4666', ink: '#1c0610', glow: 'rgba(239,93,122,.35)', rgb: '239,93,122' }
 };
 function applyTheme(name) {
-  const t = THEMES[name] || THEMES.cyan; theme = THEMES[name] ? name : 'cyan';
+  const tt = THEMES[name] || THEMES.cyan; theme = THEMES[name] ? name : 'cyan';
   const r = document.documentElement.style;
-  r.setProperty('--accent', t.a); r.setProperty('--accent-2', t.a2);
-  r.setProperty('--accent-ink', t.ink); r.setProperty('--accent-glow', t.glow);
-  particleRGB = t.rgb;
+  r.setProperty('--accent', tt.a); r.setProperty('--accent-2', tt.a2); r.setProperty('--accent-ink', tt.ink); r.setProperty('--accent-glow', tt.glow);
+  particleRGB = tt.rgb;
   document.querySelectorAll('.swatch').forEach((s) => s.classList.toggle('is-active', s.dataset.theme === theme));
 }
 
-/* ================= Sons (WebAudio) ================= */
+/* ================= Sons ================= */
 const sound = (function () {
   let ctx = null, enabled = true, ambient = null, ambientWanted = false;
   function ac() { if (!ctx) { try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch { ctx = null; } } if (ctx && ctx.state === 'suspended') ctx.resume(); return ctx; }
@@ -72,9 +120,7 @@ const sound = (function () {
     if (!enabled) return; const c = ac(); if (!c) return;
     const o = c.createOscillator(), g = c.createGain();
     o.type = type || 'sine'; o.frequency.value = freq;
-    g.gain.setValueAtTime(0.0001, c.currentTime);
-    g.gain.linearRampToValueAtTime(vol || 0.05, c.currentTime + 0.012);
-    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + (dur || 0.12));
+    g.gain.setValueAtTime(0.0001, c.currentTime); g.gain.linearRampToValueAtTime(vol || 0.05, c.currentTime + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + (dur || 0.12));
     o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime + (dur || 0.12) + 0.03);
   }
   function startAmbient() {
@@ -87,9 +133,7 @@ const sound = (function () {
   }
   function stopAmbient() { if (!ambient) return; const c = ctx, a = ambient; ambient = null; try { a.master.gain.setTargetAtTime(0.0001, c.currentTime, 1); } catch { /* */ } setTimeout(() => { try { a.oscs.forEach((o) => o.stop()); a.lfo.stop(); } catch { /* */ } }, 1600); }
   return {
-    setEnabled(v) { enabled = !!v; },
-    setAmbientWanted(v) { ambientWanted = !!v; if (v) startAmbient(); else stopAmbient(); },
-    resume() { ac(); if (ambientWanted && !ambient) startAmbient(); },
+    setEnabled(v) { enabled = !!v; }, setAmbientWanted(v) { ambientWanted = !!v; if (v) startAmbient(); else stopAmbient(); }, resume() { ac(); if (ambientWanted && !ambient) startAmbient(); },
     click() { blip(520, 0.07, 'triangle', 0.035); },
     launch() { blip(330, 0.13, 'sawtooth', 0.05); setTimeout(() => blip(494, 0.16, 'sawtooth', 0.05), 90); setTimeout(() => blip(660, 0.22, 'sawtooth', 0.045), 190); },
     success() { blip(523, 0.12, 'sine', 0.05); setTimeout(() => blip(784, 0.22, 'sine', 0.05), 110); },
@@ -104,14 +148,11 @@ function setProgress(pct) { const v = Math.max(0, Math.min(100, pct || 0)); el.p
 function showOverlay() { el.overlay.classList.remove('hidden'); }
 function hideOverlay() { el.overlay.classList.add('hidden'); }
 function fmtSize(b) { if (!b) return ''; if (b > 1048576) return (b / 1048576).toFixed(1) + ' Mo'; if (b > 1024) return (b / 1024).toFixed(0) + ' Ko'; return b + ' o'; }
-function fmtDuration(ms) { if (!ms || ms < 60000) return ms ? "moins d'1 min" : '—'; const m = Math.floor(ms / 60000), h = Math.floor(m / 60); return h > 0 ? `${h}h ${m % 60}m` : `${m}m`; }
+function fmtDuration(ms) { if (!ms || ms < 60000) return ms ? (curLang === 'en' ? 'under 1 min' : "moins d'1 min") : '—'; const m = Math.floor(ms / 60000), h = Math.floor(m / 60); return h > 0 ? `${h}h ${m % 60}m` : `${m}m`; }
 function fileUrl(p) { return 'file:///' + String(p).replace(/\\/g, '/'); }
 function updatePlayButton() {
   el.btnPlay.disabled = !connected || busy || maintenance;
-  if (maintenance) el.btnPlaySub.textContent = 'Maintenance';
-  else if (busy) el.btnPlaySub.textContent = 'Lancement en cours…';
-  else if (connected) el.btnPlaySub.textContent = 'Prêt à jouer';
-  else el.btnPlaySub.textContent = "Connecte-toi d'abord";
+  el.btnPlaySub.textContent = maintenance ? t('play_maint') : busy ? t('play_busy') : connected ? t('play_ready') : t('play_login');
 }
 
 /* ================= Navigation ================= */
@@ -123,38 +164,43 @@ function showView(view) {
 }
 document.querySelectorAll('.nav__item').forEach((item) => item.addEventListener('click', () => { sound.click(); showView(item.dataset.view); }));
 
-/* ================= Fenêtre ================= */
 el.btnMin.addEventListener('click', () => api.minimize());
 el.btnClose.addEventListener('click', () => api.close());
 
 /* ================= Compte ================= */
+function renderAccount() {
+  if (profileName) {
+    el.acctName.textContent = profileName; el.acctState.textContent = t('acct_connected'); el.account.classList.add('is-online');
+    el.btnAccount.textContent = t('acct_logout'); el.btnAccount.classList.add('account__btn--ghost');
+  } else {
+    el.acctName.textContent = t('acct_disconnected'); el.acctState.textContent = t('acct_offline'); el.account.classList.remove('is-online');
+    el.btnAccount.textContent = t('acct_login'); el.btnAccount.classList.remove('account__btn--ghost');
+  }
+}
 function setAccount(profile) {
-  connected = !!profile;
+  connected = !!profile; profileName = profile ? profile.name : null;
   if (profile) {
-    el.acctName.textContent = profile.name; el.acctState.textContent = 'Connecté';
-    el.account.classList.add('is-online');
     el.acctAvatar.src = `https://minotar.net/helm/${encodeURIComponent(profile.name)}/64.png`;
-    el.btnAccount.textContent = 'Quitter'; el.btnAccount.classList.add('account__btn--ghost');
     el.heroAvatar.src = `https://minotar.net/armor/bust/${encodeURIComponent(profile.name)}/400.png`;
     el.heroAvatar.onload = () => el.heroAvatar.classList.add('is-shown');
-  } else {
-    el.acctName.textContent = 'Non connecté'; el.acctState.textContent = 'Hors ligne';
-    el.account.classList.remove('is-online'); el.acctAvatar.removeAttribute('src');
-    el.btnAccount.textContent = 'Connexion'; el.btnAccount.classList.remove('account__btn--ghost');
-    el.heroAvatar.classList.remove('is-shown'); el.heroAvatar.removeAttribute('src');
-  }
-  updatePlayButton();
+  } else { el.acctAvatar.removeAttribute('src'); el.heroAvatar.classList.remove('is-shown'); el.heroAvatar.removeAttribute('src'); }
+  renderAccount(); updatePlayButton();
 }
 el.btnAccount.addEventListener('click', async () => {
   if (busy) return; sound.click();
-  if (connected) { await api.logout(); setAccount(null); setStatus('Déconnecté.'); return; }
-  setStatus('Connexion à Microsoft…'); el.btnAccount.disabled = true;
+  if (connected) { await api.logout(); setAccount(null); setStatus(t('disconnected')); return; }
+  setStatus(t('connecting')); el.btnAccount.disabled = true;
   const res = await api.login(); el.btnAccount.disabled = false;
-  if (res.ok) { setAccount(res.profile); setStatus(`Bienvenue ${res.profile.name} !`); sound.success(); refreshAchCount(); }
-  else { setStatus('Échec de la connexion : ' + res.error); sound.error(); }
+  if (res.ok) { setAccount(res.profile); setStatus(`${t('welcome')} ${res.profile.name} !`); sound.success(); refreshAchCount(); }
+  else { setStatus(t('login_fail') + res.error); sound.error(); }
 });
 
 /* ================= Modpack / serveur ================= */
+function renderServer() {
+  if (!serverTarget || !serverTarget.ip) { el.homeServer.textContent = `${t('addr')} : ${t('addr_none')}`; el.srvState.textContent = t('srv_modded'); return; }
+  el.homeServer.textContent = `${t('addr')} : ${serverTarget.ip}:${serverTarget.port || 25565}`;
+  el.srvState.textContent = serverOnline === null ? t('srv_checking') : serverOnline ? t('srv_online') : t('srv_offline');
+}
 function renderMods(list) {
   el.modsList.innerHTML = '';
   if (!list || !list.length) { el.modsEmpty.classList.remove('hidden'); return; }
@@ -162,15 +208,14 @@ function renderMods(list) {
   for (const mod of list) {
     const row = document.createElement('div'); row.className = 'modrow';
     row.innerHTML = '<div class="modrow__icon"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 7l8-4 8 4-8 4-8-4Zm0 5 8 4 8-4M4 17l8 4 8-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg></div><div class="modrow__name"></div><div class="modrow__size"></div>';
-    row.querySelector('.modrow__name').textContent = mod.name;
-    row.querySelector('.modrow__size').textContent = fmtSize(mod.size);
+    row.querySelector('.modrow__name').textContent = mod.name; row.querySelector('.modrow__size').textContent = fmtSize(mod.size);
     el.modsList.appendChild(row);
   }
 }
 function showBanner(text, isMaint) { el.bannerText.textContent = text; el.banner.classList.toggle('banner--maint', !!isMaint); el.banner.classList.remove('hidden'); el.content.classList.add('has-banner'); }
 async function loadModpackInfo() {
   const res = await api.getModpackInfo();
-  if (!res.ok) { setStatus('Modpack injoignable : ' + res.error); el.srvState.textContent = 'Modpack indisponible'; return; }
+  if (!res.ok) { setStatus('Modpack: ' + res.error); el.srvState.textContent = '—'; return; }
   const i = res.info;
   el.homeTitle.textContent = i.name;
   el.chipMc.querySelector('.chip__v').textContent = i.minecraft;
@@ -179,24 +224,20 @@ async function loadModpackInfo() {
   el.modsCount.textContent = i.mods + (i.mods > 1 ? ' mods' : ' mod');
   renderMods(i.modList);
   if (i.overrides) { el.overridesCard.classList.remove('hidden'); el.overridesSize.textContent = fmtSize(i.overrides.size); } else el.overridesCard.classList.add('hidden');
-
-  changelogData = i.changelog;
-  el.btnChangelog.classList.toggle('hidden', !(changelogData && changelogData.length));
+  changelogData = i.changelog; el.btnChangelog.classList.toggle('hidden', !(changelogData && changelogData.length));
   if (i.isNewVersion && changelogData && changelogData.length) { renderChangelog(); el.clModal.classList.remove('hidden'); }
-
   maintenance = false;
   if (i.maintenance) { maintenance = true; showBanner('⚠ ' + i.maintenance.message, true); }
   else if (i.announcement && i.announcement.text) showBanner('📢 ' + i.announcement.text, false);
   updatePlayButton();
-
-  if (i.server && i.server.ip) { serverTarget = i.server; el.homeServer.textContent = `Adresse : ${i.server.ip}:${i.server.port || 25565}`; pingServer(); }
-  else el.homeServer.textContent = 'Adresse : non configurée';
+  serverTarget = i.server || null; serverOnline = null; renderServer();
+  if (serverTarget && serverTarget.ip) pingServer();
 }
 async function pingServer() {
-  if (!serverTarget) return; el.srvState.textContent = 'Vérification…';
-  const r = await api.pingServer(serverTarget.ip, serverTarget.port);
-  el.srvDot.classList.toggle('is-online', r.online); el.srvDot.classList.toggle('is-offline', !r.online);
-  el.srvState.textContent = r.online ? 'Serveur en ligne' : 'Serveur hors ligne';
+  if (!serverTarget) return; serverOnline = null; renderServer();
+  const r = await api.pingServer(serverTarget.ip, serverTarget.port); serverOnline = !!r.online;
+  el.srvDot.classList.toggle('is-online', serverOnline); el.srvDot.classList.toggle('is-offline', !serverOnline);
+  renderServer();
 }
 
 /* ================= Actualités ================= */
@@ -234,8 +275,8 @@ async function loadScreens() {
 el.lightbox.addEventListener('click', (e) => { if (e.target === el.lightbox) el.lightbox.classList.add('hidden'); });
 el.lbClose.addEventListener('click', () => el.lightbox.classList.add('hidden'));
 el.lbOpen.addEventListener('click', () => { if (currentShot) api.openPath(currentShot); });
-el.lbCopy.addEventListener('click', async () => { if (!currentShot) return; const r = await api.copyScreenshot(currentShot); el.lbCopy.textContent = r.ok ? 'Copié ✓' : 'Échec'; setTimeout(() => { el.lbCopy.textContent = 'Copier'; }, 1500); });
-el.lbShare.addEventListener('click', async () => { if (!currentShot) return; el.lbShare.textContent = 'Envoi…'; const r = await api.shareScreenshot(currentShot); el.lbShare.textContent = r.ok ? 'Partagé ✓' : 'Échec'; setTimeout(() => { el.lbShare.textContent = 'Partager Discord'; }, 1800); });
+el.lbCopy.addEventListener('click', async () => { if (!currentShot) return; const r = await api.copyScreenshot(currentShot); el.lbCopy.textContent = r.ok ? 'Copié ✓' : 'Échec'; setTimeout(() => { el.lbCopy.textContent = t('copy'); }, 1500); });
+el.lbShare.addEventListener('click', async () => { if (!currentShot) return; el.lbShare.textContent = '…'; const r = await api.shareScreenshot(currentShot); el.lbShare.textContent = r.ok ? '✓' : '✕'; setTimeout(() => { el.lbShare.textContent = t('share'); }, 1800); });
 el.btnScreensFolder.addEventListener('click', () => { sound.click(); if (gameDir) api.openPath(gameDir + '\\screenshots'); });
 
 /* ================= Succès ================= */
@@ -253,16 +294,12 @@ async function openAchievements() {
 }
 el.btnAch.addEventListener('click', openAchievements);
 el.achX.addEventListener('click', () => el.achModal.classList.add('hidden'));
-api.onAchievement((a) => {
-  el.achToastIcon.textContent = a.icon || '🏆'; el.achToastName.textContent = a.name;
-  el.achToast.classList.remove('hidden'); sound.success();
-  setTimeout(() => el.achToast.classList.add('hidden'), 4200); refreshAchCount();
-});
+api.onAchievement((a) => { el.achToastIcon.textContent = a.icon || '🏆'; el.achToastName.textContent = a.name; el.achToast.classList.remove('hidden'); sound.success(); setTimeout(() => el.achToast.classList.add('hidden'), 4200); refreshAchCount(); });
 
 /* ================= Changelog ================= */
 function renderChangelog() {
   el.clBody.innerHTML = '';
-  if (!changelogData || !changelogData.length) { el.clBody.innerHTML = '<p class="muted">Aucun changelog disponible.</p>'; return; }
+  if (!changelogData || !changelogData.length) { el.clBody.innerHTML = '<p class="muted">—</p>'; return; }
   for (const v of changelogData) {
     const div = document.createElement('div'); div.className = 'cl-ver';
     const head = document.createElement('div'); head.className = 'cl-ver__head'; head.textContent = 'Version ' + (v.version || '');
@@ -278,57 +315,46 @@ el.clX.addEventListener('click', () => el.clModal.classList.add('hidden'));
 /* ================= Jouer ================= */
 el.btnPlay.addEventListener('click', async () => {
   if (busy || !connected || maintenance) return;
-  sound.launch(); busy = true; updatePlayButton();
-  setProgress(0); setStatus('Initialisation…'); showOverlay();
+  sound.launch(); busy = true; updatePlayButton(); setProgress(0); setStatus(t('init')); showOverlay();
   const res = await api.play();
-  if (!res.ok) { setStatus('Erreur : ' + res.error); sound.error(); hideOverlay(); busy = false; updatePlayButton(); }
+  if (!res.ok) { setStatus(t('error') + res.error); sound.error(); hideOverlay(); busy = false; updatePlayButton(); }
 });
 
 /* ================= Console ================= */
 el.btnConsole.addEventListener('click', () => { el.console.classList.toggle('hidden'); el.btnConsole.classList.toggle('is-active', !el.console.classList.contains('hidden')); });
 el.btnConsoleClear.addEventListener('click', () => { el.consoleBody.textContent = ''; });
-el.overlayConsole.addEventListener('click', () => { const hidden = el.overlayLog.classList.toggle('hidden'); el.overlayConsole.textContent = hidden ? 'Afficher la console' : 'Masquer la console'; });
+el.overlayConsole.addEventListener('click', () => { const hidden = el.overlayLog.classList.toggle('hidden'); el.overlayConsole.textContent = hidden ? t('show_console') : t('hide_console'); });
 
 /* ================= Crash ================= */
-api.onCrash((c) => {
-  hideOverlay(); busy = false; updatePlayButton(); sound.error();
-  crashFile = c.file || ''; el.crashLog.textContent = c.content || 'Aucun rapport disponible.';
-  el.crashModal.classList.remove('hidden');
-});
+api.onCrash((c) => { hideOverlay(); busy = false; updatePlayButton(); sound.error(); crashFile = c.file || ''; el.crashLog.textContent = c.content || '—'; el.crashModal.classList.remove('hidden'); });
 function closeCrash() { el.crashModal.classList.add('hidden'); }
-el.crashDismiss.addEventListener('click', closeCrash);
-el.crashX.addEventListener('click', closeCrash);
+el.crashDismiss.addEventListener('click', closeCrash); el.crashX.addEventListener('click', closeCrash);
 el.crashOpen.addEventListener('click', () => { if (crashFile) api.openPath(crashFile.replace(/[\\/][^\\/]+$/, '')); });
-el.crashCopy.addEventListener('click', async () => { try { await navigator.clipboard.writeText(el.crashLog.textContent); el.crashCopy.textContent = 'Copié ✓'; setTimeout(() => { el.crashCopy.textContent = 'Copier'; }, 1500); } catch { /* */ } });
+el.crashCopy.addEventListener('click', async () => { try { await navigator.clipboard.writeText(el.crashLog.textContent); el.crashCopy.textContent = '✓'; setTimeout(() => { el.crashCopy.textContent = t('copy'); }, 1500); } catch { /* */ } });
 
 /* ================= Paramètres ================= */
 async function loadSettings() {
   const s = await api.getSettings();
   const gb = Math.max(2, Math.round((s.ramMax || 4096) / 1024));
   el.setRam.value = gb; el.setRamVal.textContent = gb;
-  el.setJava.value = s.javaPath || '';
-  el.setKeep.checked = !!s.keepLauncherOpen;
-  el.setDirect.checked = s.directJoin !== false;
-  el.setSounds.checked = s.uiSounds !== false;
-  el.setAmbient.checked = !!s.ambientMusic;
-  applyTheme(s.theme || 'cyan');
+  el.setJava.value = s.javaPath || ''; el.setKeep.checked = !!s.keepLauncherOpen; el.setDirect.checked = s.directJoin !== false;
+  el.setSounds.checked = s.uiSounds !== false; el.setAmbient.checked = !!s.ambientMusic;
+  applyTheme(s.theme || 'cyan'); applyLang(s.lang || 'fr');
   sound.setEnabled(el.setSounds.checked); sound.setAmbientWanted(el.setAmbient.checked);
+  return s;
 }
 el.setRam.addEventListener('input', () => { el.setRamVal.textContent = el.setRam.value; });
 document.querySelectorAll('.swatch').forEach((sw) => sw.addEventListener('click', () => { sound.click(); applyTheme(sw.dataset.theme); api.saveSettings({ theme: sw.dataset.theme }); }));
+document.querySelectorAll('.langbtn').forEach((b) => b.addEventListener('click', () => { sound.click(); applyLang(b.dataset.lang); api.saveSettings({ lang: b.dataset.lang }); }));
 el.btnSave.addEventListener('click', async () => {
   sound.click(); const gb = parseInt(el.setRam.value, 10);
-  await api.saveSettings({ ramMax: gb * 1024, ramMin: Math.min(2048, gb * 1024), javaPath: el.setJava.value.trim(), keepLauncherOpen: el.setKeep.checked, directJoin: el.setDirect.checked, uiSounds: el.setSounds.checked, ambientMusic: el.setAmbient.checked, theme });
+  await api.saveSettings({ ramMax: gb * 1024, ramMin: Math.min(2048, gb * 1024), javaPath: el.setJava.value.trim(), keepLauncherOpen: el.setKeep.checked, directJoin: el.setDirect.checked, uiSounds: el.setSounds.checked, ambientMusic: el.setAmbient.checked, theme, lang: curLang });
   sound.setEnabled(el.setSounds.checked); sound.setAmbientWanted(el.setAmbient.checked);
   el.setSaved.classList.remove('hidden'); setTimeout(() => el.setSaved.classList.add('hidden'), 1800);
 });
 el.btnOpendir.addEventListener('click', () => { sound.click(); api.openGameDir(); });
 el.btnGithub.addEventListener('click', () => { if (repoUrl) api.openExternal(repoUrl); });
-el.btnRepair.addEventListener('click', async () => {
-  sound.click(); el.btnRepair.disabled = true; el.btnRepair.textContent = 'Réinitialisation…';
-  await api.repairPack(); el.btnRepair.textContent = 'Forcer la resynchro'; el.btnRepair.disabled = false;
-  setStatus('Installation réinitialisée — tout sera re-synchronisé au prochain lancement.');
-});
+el.btnRepair.addEventListener('click', async () => { sound.click(); el.btnRepair.disabled = true; await api.repairPack(); el.btnRepair.disabled = false; setStatus(t('repaired')); });
 
 /* ================= Stats ================= */
 function applyStats(s) { if (s) el.statPlaytime.textContent = fmtDuration(s.playtimeMs); }
@@ -337,9 +363,9 @@ function applyStats(s) { if (s) el.statPlaytime.textContent = fmtDuration(s.play
 api.onStatus((m) => setStatus(m));
 api.onProgress((p) => {
   let pct = 0;
-  if (p.phase === 'mods') { const frac = p.size ? p.recv / p.size : 0; if (p.total) pct = ((p.done + frac) / p.total) * 100; if (p.file && p.size) setStatus(`Mod ${p.file} — ${Math.round(frac * 100)}%`); }
-  else if (p.phase === 'overrides') { const frac = p.size ? p.recv / p.size : 0; pct = frac * 100; setStatus(`Configs & scripts — ${Math.round(frac * 100)}%`); }
-  else if (p.phase === 'mc') { const cur = typeof p.task === 'number' ? p.task : p.current; if (typeof cur === 'number' && p.total) pct = (cur / p.total) * 100; if (p.type) setStatus(`Minecraft : ${p.type}…`); }
+  if (p.phase === 'mods') { const frac = p.size ? p.recv / p.size : 0; if (p.total) pct = ((p.done + frac) / p.total) * 100; }
+  else if (p.phase === 'overrides') { const frac = p.size ? p.recv / p.size : 0; pct = frac * 100; }
+  else if (p.phase === 'mc') { const cur = typeof p.task === 'number' ? p.task : p.current; if (typeof cur === 'number' && p.total) pct = (cur / p.total) * 100; }
   setProgress(pct);
 });
 api.onLog((line) => { el.consoleBody.textContent += line + '\n'; el.consoleBody.scrollTop = el.consoleBody.scrollHeight; el.overlayLog.textContent += line + '\n'; el.overlayLog.scrollTop = el.overlayLog.scrollHeight; });
@@ -348,9 +374,9 @@ api.onClosed(() => { setProgress(0); busy = false; updatePlayButton(); hideOverl
 api.onStats((s) => applyStats(s));
 api.onUpdate((u) => {
   const toast = $('update-toast'), text = $('update-text'), btn = $('btn-update'); toast.classList.remove('hidden');
-  if (u.state === 'available') text.textContent = `Mise à jour ${u.version} en téléchargement…`;
-  else if (u.state === 'downloading') text.textContent = `Mise à jour : ${u.percent}%`;
-  else if (u.state === 'ready') { text.textContent = 'Mise à jour prête.'; btn.classList.remove('hidden'); }
+  if (u.state === 'available') text.textContent = `${u.version} …`;
+  else if (u.state === 'downloading') text.textContent = `${u.percent}%`;
+  else if (u.state === 'ready') { text.textContent = '✓'; btn.classList.remove('hidden'); }
   else if (u.state === 'error') toast.classList.add('hidden');
 });
 $('btn-update').addEventListener('click', () => api.installUpdate());
@@ -376,33 +402,45 @@ function initParticles() {
   build(); window.addEventListener('resize', build); requestAnimationFrame(frame);
 }
 
+/* ================= Onboarding ================= */
+const OB_STEPS = [['ob_t1', 'ob_x1'], ['ob_t2', 'ob_x2'], ['ob_t3', 'ob_x3']];
+let obStep = 0;
+function renderOnboard() {
+  const [tk, xk] = OB_STEPS[obStep];
+  el.obTitle.textContent = t(tk); el.obText.textContent = t(xk);
+  el.obSkip.textContent = t('ob_skip');
+  el.obNext.textContent = obStep === OB_STEPS.length - 1 ? t('ob_start') : t('ob_next');
+  el.obDots.innerHTML = '';
+  OB_STEPS.forEach((_, idx) => { const d = document.createElement('span'); d.className = 'onboard__dot' + (idx === obStep ? ' is-active' : ''); el.obDots.appendChild(d); });
+}
+function finishOnboard() { el.onboard.classList.add('hidden'); api.saveSettings({ onboarded: true }); }
+el.obSkip.addEventListener('click', () => { sound.click(); finishOnboard(); });
+el.obNext.addEventListener('click', () => { sound.click(); if (obStep < OB_STEPS.length - 1) { obStep++; renderOnboard(); } else finishOnboard(); });
+
 /* ================= Démarrage ================= */
 (async function init() {
   initParticles();
   try {
     const info = await api.appInfo();
     el.aboutVersion.textContent = `CraftIndustries Launcher v${info.version}`;
-    el.setGamedir.textContent = info.gameDir; gameDir = info.gameDir;
-    hasWebhook = !!info.hasWebhook;
+    el.setGamedir.textContent = info.gameDir; gameDir = info.gameDir; hasWebhook = !!info.hasWebhook;
     if (info.repo) repoUrl = `https://github.com/${info.repo.owner}/${info.repo.repo}`;
-    if (info.totalRamGB) {
-      const max = Math.max(4, Math.min(32, info.totalRamGB - 1));
-      el.setRam.max = max;
-      const rec = Math.min(8, Math.max(4, Math.floor(info.totalRamGB / 2)));
-      el.ramHint.textContent = `RAM détectée : ${info.totalRamGB} Go · recommandé : ${rec} Go.`;
-    }
+    if (info.totalRamGB) { totalRamGB = info.totalRamGB; el.setRam.max = Math.max(4, Math.min(32, totalRamGB - 1)); setRamHint(); }
   } catch { /* */ }
 
-  await loadSettings();
+  const settings = await loadSettings();
   await loadModpackInfo();
   try { applyStats(await api.getStats()); } catch { /* */ }
   refreshAchCount();
 
-  setStatus('Connexion automatique…');
+  setStatus(t('auto_connect'));
   const res = await api.loginSilent();
-  if (res.ok && res.profile) { setAccount(res.profile); setStatus(`Bienvenue ${res.profile.name} !`); refreshAchCount(); }
-  else { setAccount(null); setStatus('Connecte-toi pour jouer.'); }
+  if (res.ok && res.profile) { setAccount(res.profile); setStatus(`${t('welcome')} ${res.profile.name} !`); refreshAchCount(); }
+  else { setAccount(null); setStatus(t('connect_to_play')); }
 
-  setTimeout(() => { el.splash.classList.add('is-hiding'); setTimeout(() => el.splash.classList.add('hidden'), 600); }, 1500);
+  setTimeout(() => {
+    el.splash.classList.add('is-hiding'); setTimeout(() => el.splash.classList.add('hidden'), 600);
+    if (!settings.onboarded) { obStep = 0; renderOnboard(); el.onboard.classList.remove('hidden'); }
+  }, 1500);
 })();
 })(); // fin de l'IIFE principale
