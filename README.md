@@ -26,7 +26,7 @@ Tout est centralisé dans **`package.json`** (déjà câblé sur ce dépôt) :
   "minecraft": "1.20.1",              // ← version MC
   "forge": "47.3.0",                  // ← version Forge
   "serverIp": "play.exemple.fr",      // ← À REMPLACER par l'IP de votre serveur
-  "serverPort": 25565
+  "serverPort": 25566
 }
 ```
 
@@ -202,10 +202,26 @@ Ces champs sont **préservés** par `npm run make-manifest` :
 - `announcement` → bandeau d'information.
 - `changelog` → bouton « Quoi de neuf » + fenêtre auto à la 1ʳᵉ ouverture après un changement de version.
 
-### Discord (dans `package.json` → `launcher`)
-- `discordAppId` : ID d'une application Discord (https://discord.com/developers) pour la **Rich Presence**
-  (« Joue sur CraftIndustries »). Uploade une image nommée `logo` dans l'app Discord (Art Assets).
-- `discordWebhook` : URL d'un webhook de salon Discord pour activer le **partage de screenshots**.
+### Discord — Rich Presence (public, dans `package.json` → `launcher`)
+- `discordAppId` : **Application ID** (public) d'une appli Discord (https://discord.com/developers)
+  pour la **Rich Presence** (« En jeu sur CraftIndustries »).
+- Dans l'appli → **Rich Presence → Art Assets**, uploade 3 images nommées **`logo`**, **`play`**, **`idle`**.
+- `discordButtonUrl` / `discordButtonLabel` : bouton cliquable (ex. invitation Discord).
+- ⚠️ N'utilise **que l'Application ID** ici (public). Le **Client Secret** / **Bot Token** ne sont
+  pas nécessaires et ne doivent jamais être committés.
+
+### Discord — Webhook (SECRET, jamais dans le dépôt)
+Le partage de captures utilise un webhook = **credential**. Il est lu, dans l'ordre :
+1. variable d'environnement `CRAFT_DISCORD_WEBHOOK`,
+2. fichier **`src/main/secrets.json`** (gitignoré) : `{ "discordWebhook": "https://discord.com/api/webhooks/…" }`,
+3. (legacy) `package.json` → laisser **vide**.
+
+Pour les **builds GitHub Actions** : ajoute le webhook dans
+**Settings → Secrets and variables → Actions → New repository secret** nommé **`DISCORD_WEBHOOK`**.
+Le workflow l'injecte dans `secrets.json` au build, sans jamais l'exposer dans le code.
+
+> ⚠️ Un webhook embarqué dans une app client reste extractible par les utilisateurs de l'app.
+> Régénère-le s'il fuite. Pour un risque nul, héberge plutôt un relais, ou garde seulement « Copier l'image ».
 
 ### Succès, temps de jeu, thèmes, sons, tray
 Gérés automatiquement / via les **Paramètres** (thème d'accent, sons & ambiance, RAM détectée).

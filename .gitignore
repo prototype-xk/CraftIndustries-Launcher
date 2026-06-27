@@ -24,3 +24,6 @@ Thumbs.db
 .vscode/
 .idea/
 .claude/settings.local.json
+
+# Secrets (webhook Discord, etc.) — NE JAMAIS committer
+src/main/secrets.json

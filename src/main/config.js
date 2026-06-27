@@ -21,6 +21,10 @@ function repoInfo() {
 const repo = repoInfo();
 const L = pkg.launcher || {};
 
+// Secrets hors dépôt (gitignoré) : src/main/secrets.json, ex. { "discordWebhook": "..." }
+let secrets = {};
+try { secrets = require('./secrets.json'); } catch { secrets = {}; }
+
 const MANIFEST_URL =
   `https://raw.githubusercontent.com/${repo.owner}/${repo.repo}/${repo.branch}/modpack/manifest.json`;
 const NEWS_URL =
@@ -28,7 +32,9 @@ const NEWS_URL =
 
 const serverName = L.serverName || 'CraftIndustries';
 const discordAppId = L.discordAppId || '';
-const discordWebhook = L.discordWebhook || '';
+const discordWebhook = process.env.CRAFT_DISCORD_WEBHOOK || secrets.discordWebhook || L.discordWebhook || '';
+const discordButtonUrl = L.discordButtonUrl || '';
+const discordButtonLabel = L.discordButtonLabel || 'Rejoindre le serveur';
 
 function getGameDir() { return path.join(app.getPath('appData'), '.craftindustries'); }
 function settingsFile() { return path.join(app.getPath('userData'), 'settings.json'); }
@@ -84,7 +90,7 @@ function addSession(ms) {
 }
 
 module.exports = {
-  pkg, repo, serverName, discordAppId, discordWebhook,
+  pkg, repo, serverName, discordAppId, discordWebhook, discordButtonUrl, discordButtonLabel,
   MANIFEST_URL, NEWS_URL,
   getGameDir, settingsFile, authFile, statsFile,
   DEFAULT_SETTINGS, loadSettings, saveSettings,

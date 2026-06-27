@@ -16,8 +16,10 @@
     "forge": "47.3.0",
     "serverIp": "37.187.153.71",
     "serverPort": 25566,
-    "discordAppId": "",
-    "discordWebhook": "https://discord.com/api/webhooks/1519289309545496638/Pky1yfOhZC-O2Gifu16nvgXEX3jjRQ6RWF810-3D5HutddYzIFhk4i3nUF1s7MF1zta-"
+    "discordAppId": "1519289211919011900",
+    "discordButtonUrl": "https://discord.gg/cqdMd2TW4u",
+    "discordButtonLabel": "Rejoindre le Discord",
+    "discordWebhook": ""
   },
   "scripts": {
     "start": "electron .",
