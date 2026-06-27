@@ -7,9 +7,11 @@ const ACHIEVEMENTS = [
   { id: 'play1',  name: 'Premier lancement',      desc: 'Lancer le jeu une fois',             icon: '🚀', test: (s) => s.sessions >= 1 },
   { id: 'play10', name: 'Habitué',                desc: 'Lancer le jeu 10 fois',              icon: '🎮', test: (s) => s.sessions >= 10 },
   { id: 'play50', name: 'Accro',                  desc: 'Lancer le jeu 50 fois',              icon: '🔥', test: (s) => s.sessions >= 50 },
-  { id: 'time1',  name: 'Une heure au compteur',  desc: 'Jouer 1 heure au total',             icon: '⏱️', test: (s) => s.playtimeMs >= 3600000 },
-  { id: 'time10', name: 'Vétéran',                desc: 'Jouer 10 heures au total',           icon: '🏆', test: (s) => s.playtimeMs >= 36000000 },
-  { id: 'time100', name: 'Légende',               desc: 'Jouer 100 heures au total',          icon: '👑', test: (s) => s.playtimeMs >= 360000000 },
+  { id: 'play100', name: 'Addict',                 desc: 'Lancer le jeu 100 fois',             icon: '💊', test: (s) => s.sessions >= 100 },
+  { id: 'play500', name: 'Obsession',              desc: 'Lancer le jeu 500 fois',             icon: '🚿', test: (s) => s.sessions >= 500 },
+  { id: 'time1',  name: 'Endurant',  desc: 'Jouer 10 heures au total',             icon: '⏱️', test: (s) => s.playtimeMs >= 36000000 },
+  { id: 'time10', name: 'Vétéran',                desc: 'Jouer 100 heures au total',           icon: '🏆', test: (s) => s.playtimeMs >= 360000000 },
+  { id: 'time100', name: 'Légende',               desc: 'Jouer 1000 heures au total',          icon: '👑', test: (s) => s.playtimeMs >= 3600000000 },
   { id: 'shot',   name: 'Photographe',            desc: 'Prendre une capture en jeu',         icon: '📸', test: (s, ctx) => (ctx.screenshots || 0) >= 1 }
 ];
 
