@@ -1,6 +1,6 @@
 {
   "name": "craftindustries-launcher",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Launcher custom pour le serveur Minecraft moddé CraftIndustries (Forge) avec authentification Microsoft et mises à jour via GitHub.",
   "main": "src/main/main.js",
   "author": "prototype-xk",
