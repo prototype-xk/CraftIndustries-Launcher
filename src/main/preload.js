@@ -19,6 +19,8 @@ contextBridge.exposeInMainWorld('api', {
   getModpackInfo: () => ipcRenderer.invoke('modpack:info'),
   getNews: () => ipcRenderer.invoke('news:get'),
   pingServer: (ip, port) => ipcRenderer.invoke('server:ping', { ip, port }),
+  serverStatus: (ip, port) => ipcRenderer.invoke('server:status', { ip, port }),
+  getIssues: () => ipcRenderer.invoke('issues:list'),
   repairPack: () => ipcRenderer.invoke('pack:repair'),
   play: () => ipcRenderer.invoke('game:play'),
 

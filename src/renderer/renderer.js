@@ -29,6 +29,11 @@ const el = {
   setRam: $('set-ram'), setRamVal: $('set-ram-val'), setJava: $('set-java'), setKeep: $('set-keep'), setDirect: $('set-direct'),
   setSounds: $('set-sounds'), setAmbient: $('set-ambient'), setGamedir: $('set-gamedir'), btnOpendir: $('btn-opendir'),
   btnRepair: $('btn-repair'), btnSave: $('btn-save'), setSaved: $('set-saved'), aboutVersion: $('about-version'), btnGithub: $('btn-github'),
+  navAdmin: $('nav-admin'), btnRequestMod: $('btn-request-mod'),
+  adminReqlist: $('admin-reqlist'), adminReqEmpty: $('admin-req-empty'), adminReqRefresh: $('admin-req-refresh'),
+  adminEditNews: $('admin-edit-news'), adminEditManifest: $('admin-edit-manifest'), adminOpenIssues: $('admin-open-issues'),
+  adminResync: $('admin-resync'), adminOpenMods: $('admin-open-mods'), adminOpenConfig: $('admin-open-config'), adminOpenCrash: $('admin-open-crash'), adminOpenGame: $('admin-open-game'),
+  adminDiag: $('admin-diag'), adminDiagRefresh: $('admin-diag-refresh'),
   onboard: $('onboard'), obTitle: $('ob-title'), obText: $('ob-text'), obDots: $('ob-dots'), obSkip: $('ob-skip'), obNext: $('ob-next')
 };
 
@@ -50,6 +55,7 @@ const I18N = {
     ach_title: '🏆 Succès', cl_title: '✨ Quoi de neuf', ach_unlocked: 'Succès débloqué', share: 'Partager Discord',
     ready: 'Prêt.', connect_to_play: 'Connecte-toi pour jouer.', connecting: 'Connexion à Microsoft…', auto_connect: 'Connexion automatique…', disconnected: 'Déconnecté.', welcome: 'Bienvenue', login_fail: 'Échec de la connexion : ', init: 'Initialisation…', error: 'Erreur : ', repaired: 'Installation réinitialisée — tout sera re-synchronisé au prochain lancement.',
     ob_skip: 'Passer', ob_next: 'Suivant', ob_start: 'Commencer',
+    nav_admin: 'Admin', admin_title: 'Administration', admin_sub: 'Réservé aux administrateurs', admin_requests: 'Demandes de mods', admin_req_empty: 'Aucune demande en attente.', admin_content: 'Contenu (édition sur GitHub)', admin_edit_news: 'Éditer les actualités', admin_edit_manifest: 'Maintenance / annonce / mods', admin_open_issues: 'Toutes les demandes (GitHub)', admin_tools: 'Outils', admin_open_game: 'Dossier de jeu', admin_diag: 'Diagnostics', request_mod: 'Demander un mod', req_handle: 'Traiter sur GitHub', diag_players: 'Joueurs en ligne', diag_motd: 'MOTD', diag_mcver: 'Version serveur', diag_ram: 'RAM système', diag_gamedir: 'Dossier de jeu', diag_appver: 'Version launcher', diag_status: 'Statut serveur',
     ob_t1: 'Bienvenue sur CraftIndustries', ob_x1: 'Connecte-toi avec ton compte Microsoft (bouton en bas à gauche) pour jouer.',
     ob_t2: 'Règle ta mémoire', ob_x2: 'Dans Paramètres, ajuste la RAM (4–6 Go conseillé) et choisis ton thème.',
     ob_t3: 'Prêt à jouer', ob_x3: 'Clique sur JOUER : le launcher installe Minecraft, Forge, les mods et les configs automatiquement. Bon jeu !'
@@ -70,6 +76,7 @@ const I18N = {
     ach_title: '🏆 Achievements', cl_title: "✨ What's new", ach_unlocked: 'Achievement unlocked', share: 'Share to Discord',
     ready: 'Ready.', connect_to_play: 'Sign in to play.', connecting: 'Connecting to Microsoft…', auto_connect: 'Auto sign-in…', disconnected: 'Signed out.', welcome: 'Welcome', login_fail: 'Sign-in failed: ', init: 'Initializing…', error: 'Error: ', repaired: 'Installation reset — everything will re-sync next launch.',
     ob_skip: 'Skip', ob_next: 'Next', ob_start: 'Get started',
+    nav_admin: 'Admin', admin_title: 'Administration', admin_sub: 'Admins only', admin_requests: 'Mod requests', admin_req_empty: 'No pending requests.', admin_content: 'Content (edit on GitHub)', admin_edit_news: 'Edit news', admin_edit_manifest: 'Maintenance / announcement / mods', admin_open_issues: 'All requests (GitHub)', admin_tools: 'Tools', admin_open_game: 'Game folder', admin_diag: 'Diagnostics', request_mod: 'Request a mod', req_handle: 'Handle on GitHub', diag_players: 'Players online', diag_motd: 'MOTD', diag_mcver: 'Server version', diag_ram: 'System RAM', diag_gamedir: 'Game folder', diag_appver: 'Launcher version', diag_status: 'Server status',
     ob_t1: 'Welcome to CraftIndustries', ob_x1: 'Sign in with your Microsoft account (button at the bottom left) to play.',
     ob_t2: 'Set your memory', ob_x2: 'In Settings, adjust the RAM (4–6 GB recommended) and pick your theme.',
     ob_t3: 'Ready to play', ob_x3: 'Click PLAY: the launcher installs Minecraft, Forge, mods and configs automatically. Have fun!'
@@ -89,6 +96,7 @@ function applyLang(lang) {
 let connected = false, busy = false, maintenance = false;
 let repoUrl = null, serverTarget = null, gameDir = '';
 let crashFile = '', currentShot = '', changelogData = null, hasWebhook = false;
+let currentUuid = '', adminList = [], branch = 'main', lastInfo = null;
 let theme = 'cyan', profileName = null, serverOnline = null, particleRGB = '41,198,232', totalRamGB = 0;
 function setRamHint() {
   if (!totalRamGB) return;
@@ -161,6 +169,7 @@ function showView(view) {
   document.querySelectorAll('.view').forEach((v) => v.classList.toggle('view--active', v.id === 'view-' + view));
   if (view === 'news') loadNews();
   if (view === 'screens') loadScreens();
+  if (view === 'admin') { loadRequests(); loadDiag(); }
 }
 document.querySelectorAll('.nav__item').forEach((item) => item.addEventListener('click', () => { sound.click(); showView(item.dataset.view); }));
 
@@ -178,13 +187,13 @@ function renderAccount() {
   }
 }
 function setAccount(profile) {
-  connected = !!profile; profileName = profile ? profile.name : null;
+  connected = !!profile; profileName = profile ? profile.name : null; currentUuid = profile ? (profile.uuid || '') : '';
   if (profile) {
     el.acctAvatar.src = `https://minotar.net/helm/${encodeURIComponent(profile.name)}/64.png`;
     el.heroAvatar.src = `https://minotar.net/armor/bust/${encodeURIComponent(profile.name)}/400.png`;
     el.heroAvatar.onload = () => el.heroAvatar.classList.add('is-shown');
   } else { el.acctAvatar.removeAttribute('src'); el.heroAvatar.classList.remove('is-shown'); el.heroAvatar.removeAttribute('src'); }
-  renderAccount(); updatePlayButton();
+  renderAccount(); updatePlayButton(); updateAdmin();
 }
 el.btnAccount.addEventListener('click', async () => {
   if (busy) return; sound.click();
@@ -216,7 +225,7 @@ function showBanner(text, isMaint) { el.bannerText.textContent = text; el.banner
 async function loadModpackInfo() {
   const res = await api.getModpackInfo();
   if (!res.ok) { setStatus('Modpack: ' + res.error); el.srvState.textContent = '—'; return; }
-  const i = res.info;
+  const i = res.info; lastInfo = i; adminList = Array.isArray(i.admins) ? i.admins : [];
   el.homeTitle.textContent = i.name;
   el.chipMc.querySelector('.chip__v').textContent = i.minecraft;
   el.chipForge.querySelector('.chip__v').textContent = i.forge;
@@ -232,6 +241,7 @@ async function loadModpackInfo() {
   updatePlayButton();
   serverTarget = i.server || null; serverOnline = null; renderServer();
   if (serverTarget && serverTarget.ip) pingServer();
+  updateAdmin();
 }
 async function pingServer() {
   if (!serverTarget) return; serverOnline = null; renderServer();
@@ -278,6 +288,66 @@ el.lbOpen.addEventListener('click', () => { if (currentShot) api.openPath(curren
 el.lbCopy.addEventListener('click', async () => { if (!currentShot) return; const r = await api.copyScreenshot(currentShot); el.lbCopy.textContent = r.ok ? 'Copié ✓' : 'Échec'; setTimeout(() => { el.lbCopy.textContent = t('copy'); }, 1500); });
 el.lbShare.addEventListener('click', async () => { if (!currentShot) return; el.lbShare.textContent = '…'; const r = await api.shareScreenshot(currentShot); el.lbShare.textContent = r.ok ? '✓' : '✕'; setTimeout(() => { el.lbShare.textContent = t('share'); }, 1800); });
 el.btnScreensFolder.addEventListener('click', () => { sound.click(); if (gameDir) api.openPath(gameDir + '\\screenshots'); });
+
+/* ================= Admin ================= */
+function norm(u) { return String(u).replace(/-/g, '').toLowerCase(); }
+function updateAdmin() {
+  const isAdmin = !!currentUuid && adminList.map(norm).includes(norm(currentUuid));
+  el.navAdmin.classList.toggle('hidden', !isAdmin);
+  if (!isAdmin && document.getElementById('view-admin').classList.contains('view--active')) showView('home');
+}
+async function loadRequests() {
+  const res = await api.getIssues(); const items = (res && res.items) || [];
+  el.adminReqlist.innerHTML = '';
+  el.adminReqEmpty.classList.toggle('hidden', items.length > 0);
+  for (const it of items) {
+    const d = document.createElement('div'); d.className = 'req';
+    d.innerHTML = '<div class="req__head"><span class="req__title"></span><span class="req__meta"></span></div><div class="req__body"></div><div class="req__actions"><button class="btn btn--ghost btn--sm"></button></div>';
+    d.querySelector('.req__title').textContent = it.title;
+    d.querySelector('.req__meta').textContent = '#' + it.number + ' · ' + it.user;
+    d.querySelector('.req__body').textContent = it.body || '';
+    const b = d.querySelector('button'); b.textContent = t('req_handle'); b.addEventListener('click', () => api.openExternal(it.url));
+    el.adminReqlist.appendChild(d);
+  }
+}
+function renderDiag(rows) {
+  el.adminDiag.innerHTML = '';
+  for (const [k, v] of rows) {
+    const dk = document.createElement('div'); dk.className = 'diag__k'; dk.textContent = k;
+    const dv = document.createElement('div'); dv.className = 'diag__v'; dv.textContent = v;
+    el.adminDiag.appendChild(dk); el.adminDiag.appendChild(dv);
+  }
+}
+async function loadDiag() {
+  const rows = [];
+  try { const info = await api.appInfo(); rows.push([t('diag_appver'), 'v' + info.version], [t('diag_ram'), info.totalRamGB + ' Go'], [t('diag_gamedir'), info.gameDir]); } catch { /* */ }
+  if (lastInfo) rows.push([t('chip_mods'), String(lastInfo.mods)]);
+  renderDiag(rows.concat([[t('diag_status'), '…']]));
+  if (serverTarget && serverTarget.ip) {
+    const s = await api.serverStatus(serverTarget.ip, serverTarget.port);
+    const extra = [[t('diag_status'), s.online ? (curLang === 'en' ? 'Online' : 'En ligne') : (curLang === 'en' ? 'Offline' : 'Hors ligne')]];
+    if (s.online && s.players) extra.push([t('diag_players'), s.players.online + ' / ' + s.players.max]);
+    if (s.online && s.version) extra.push([t('diag_mcver'), s.version]);
+    if (s.online && s.motd) extra.push([t('diag_motd'), s.motd]);
+    renderDiag(rows.concat(extra));
+  }
+}
+el.adminReqRefresh.addEventListener('click', () => { sound.click(); loadRequests(); });
+el.adminDiagRefresh.addEventListener('click', () => { sound.click(); loadDiag(); });
+el.adminEditNews.addEventListener('click', () => { if (repoUrl) api.openExternal(`${repoUrl}/edit/${branch}/news.json`); });
+el.adminEditManifest.addEventListener('click', () => { if (repoUrl) api.openExternal(`${repoUrl}/edit/${branch}/modpack/manifest.json`); });
+el.adminOpenIssues.addEventListener('click', () => { if (repoUrl) api.openExternal(`${repoUrl}/issues?q=is%3Aissue+is%3Aopen+label%3Amod-request`); });
+el.adminResync.addEventListener('click', async () => { sound.click(); await api.repairPack(); setStatus(t('repaired')); });
+el.adminOpenMods.addEventListener('click', () => { if (gameDir) api.openPath(gameDir + '\\mods'); });
+el.adminOpenConfig.addEventListener('click', () => { if (gameDir) api.openPath(gameDir + '\\config'); });
+el.adminOpenCrash.addEventListener('click', () => { if (gameDir) api.openPath(gameDir + '\\crash-reports'); });
+el.adminOpenGame.addEventListener('click', () => api.openGameDir());
+el.btnRequestMod.addEventListener('click', () => {
+  sound.click(); if (!repoUrl) return;
+  const title = encodeURIComponent('Demande de mod : ');
+  const body = encodeURIComponent('**Nom du mod :**\n\n**Lien (Modrinth / CurseForge) :**\n\n**Pourquoi ce mod :**\n');
+  api.openExternal(`${repoUrl}/issues/new?labels=mod-request&title=${title}&body=${body}`);
+});
 
 /* ================= Succès ================= */
 async function refreshAchCount() { try { const l = await api.getAchievements(); el.achCount.textContent = l.filter((a) => a.unlocked).length; } catch { /* */ } }
@@ -424,7 +494,7 @@ el.obNext.addEventListener('click', () => { sound.click(); if (obStep < OB_STEPS
     const info = await api.appInfo();
     el.aboutVersion.textContent = `CraftIndustries Launcher v${info.version}`;
     el.setGamedir.textContent = info.gameDir; gameDir = info.gameDir; hasWebhook = !!info.hasWebhook;
-    if (info.repo) repoUrl = `https://github.com/${info.repo.owner}/${info.repo.repo}`;
+    if (info.repo) { repoUrl = `https://github.com/${info.repo.owner}/${info.repo.repo}`; branch = info.repo.branch || 'main'; }
     if (info.totalRamGB) { totalRamGB = info.totalRamGB; el.setRam.max = Math.max(4, Math.min(32, totalRamGB - 1)); setRamHint(); }
   } catch { /* */ }
 

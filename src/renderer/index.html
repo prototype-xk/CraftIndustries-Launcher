@@ -80,6 +80,10 @@
           <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13a7.6 7.6 0 0 0 0-2l1.8-1.4-2-3.4-2.1.9a7.5 7.5 0 0 0-1.7-1l-.3-2.3H9.9l-.3 2.3a7.5 7.5 0 0 0-1.7 1l-2.1-.9-2 3.4L5.6 11a7.6 7.6 0 0 0 0 2l-1.8 1.4 2 3.4 2.1-.9a7.5 7.5 0 0 0 1.7 1l.3 2.3h4.2l.3-2.3a7.5 7.5 0 0 0 1.7-1l2.1.9 2-3.4L19.4 13Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
           <span data-i18n="nav_settings">Paramètres</span>
         </button>
+        <button class="nav__item nav__item--admin hidden" id="nav-admin" data-view="admin">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 12l1.8 1.8L15 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="nav_admin">Admin</span>
+        </button>
       </nav>
 
       <div class="account" id="account">
@@ -167,6 +171,7 @@
           <div class="page__head">
             <div><h2 class="page__title" data-i18n="mods_title">Mods du modpack</h2><p class="page__sub" data-i18n="mods_sub">Synchronisés depuis GitHub</p></div>
             <div class="page__actions">
+              <button id="btn-request-mod" class="btn btn--ghost btn--sm" data-i18n="request_mod">Demander un mod</button>
               <button id="btn-changelog" class="btn btn--ghost btn--sm hidden" data-i18n="whatsnew">Quoi de neuf</button>
               <span class="badge" id="mods-count">0 mods</span>
             </div>
@@ -266,6 +271,42 @@
           <div class="settings__foot">
             <div class="about"><span id="about-version">CraftIndustries Launcher</span><button id="btn-github" class="link" data-i18n="repo">Dépôt GitHub ↗</button></div>
             <div class="settings__actions"><span class="saved hidden" id="set-saved" data-i18n="saved">Enregistré ✓</span><button id="btn-save" class="btn btn--primary" data-i18n="save">Enregistrer</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---- Admin (réservé) ---- -->
+      <section class="view" id="view-admin">
+        <div class="page">
+          <div class="page__head"><div><h2 class="page__title" data-i18n="admin_title">Administration</h2><p class="page__sub" data-i18n="admin_sub">Réservé aux administrateurs</p></div></div>
+
+          <div class="page__subhead"><span data-i18n="admin_requests">Demandes de mods</span><button id="admin-req-refresh" class="link" data-i18n="refresh">Actualiser</button></div>
+          <div class="reqlist" id="admin-reqlist"></div>
+          <div class="empty empty--sm hidden" id="admin-req-empty"><span data-i18n="admin_req_empty">Aucune demande en attente.</span></div>
+
+          <div class="card">
+            <div class="card__label" style="margin-bottom:12px" data-i18n="admin_content">Contenu (édition sur GitHub)</div>
+            <div class="admin-actions">
+              <button class="btn btn--ghost" id="admin-edit-news" data-i18n="admin_edit_news">Éditer les actualités</button>
+              <button class="btn btn--ghost" id="admin-edit-manifest" data-i18n="admin_edit_manifest">Maintenance / annonce / mods</button>
+              <button class="btn btn--ghost" id="admin-open-issues" data-i18n="admin_open_issues">Toutes les demandes (GitHub)</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__label" style="margin-bottom:12px" data-i18n="admin_tools">Outils</div>
+            <div class="admin-actions">
+              <button class="btn btn--ghost" id="admin-resync" data-i18n="repair_btn">Forcer la resynchro</button>
+              <button class="btn btn--ghost" id="admin-open-mods">mods/</button>
+              <button class="btn btn--ghost" id="admin-open-config">config/</button>
+              <button class="btn btn--ghost" id="admin-open-crash">crash-reports/</button>
+              <button class="btn btn--ghost" id="admin-open-game" data-i18n="admin_open_game">Dossier de jeu</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__row"><div class="card__label" data-i18n="admin_diag">Diagnostics</div><button id="admin-diag-refresh" class="link" data-i18n="refresh">Actualiser</button></div>
+            <div class="diag" id="admin-diag"></div>
           </div>
         </div>
       </section>

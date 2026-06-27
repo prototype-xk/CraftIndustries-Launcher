@@ -44,6 +44,68 @@ function pingServer(host, port, timeout = 3500) {
   });
 }
 
+/* ---------- Server List Ping (statut détaillé : joueurs, MOTD) ---------- */
+function writeVarInt(value) {
+  const bytes = []; let v = value >>> 0;
+  do { let temp = v & 0x7f; v >>>= 7; if (v !== 0) temp |= 0x80; bytes.push(temp); } while (v !== 0);
+  return Buffer.from(bytes);
+}
+function readVarInt(buf, offset) {
+  let numRead = 0, result = 0, byte;
+  do {
+    if (offset + numRead >= buf.length) return null;
+    byte = buf[offset + numRead];
+    result |= (byte & 0x7f) << (7 * numRead);
+    numRead++;
+    if (numRead > 5) return null;
+  } while ((byte & 0x80) !== 0);
+  return { value: result >>> 0, next: offset + numRead };
+}
+function chatText(d) {
+  if (typeof d === 'string') return d;
+  if (!d || typeof d !== 'object') return '';
+  let s = d.text || '';
+  if (Array.isArray(d.extra)) s += d.extra.map(chatText).join('');
+  return s;
+}
+function slpStatus(host, port, timeout = 4000) {
+  return new Promise((resolve) => {
+    const socket = new net.Socket();
+    let done = false, buf = Buffer.alloc(0);
+    const finish = (val) => { if (done) return; done = true; try { socket.destroy(); } catch { /* */ } resolve(val); };
+    socket.setTimeout(timeout);
+    socket.once('timeout', () => finish({ online: false }));
+    socket.once('error', () => finish({ online: false }));
+    socket.connect(port || 25565, host, () => {
+      try {
+        const hostBuf = Buffer.from(host, 'utf8');
+        const portBuf = Buffer.alloc(2); portBuf.writeUInt16BE(port || 25565, 0);
+        const payload = Buffer.concat([writeVarInt(0x00), writeVarInt(763), writeVarInt(hostBuf.length), hostBuf, portBuf, writeVarInt(1)]);
+        socket.write(Buffer.concat([writeVarInt(payload.length), payload]));
+        socket.write(Buffer.concat([writeVarInt(1), writeVarInt(0x00)]));
+      } catch { finish({ online: false }); }
+    });
+    socket.on('data', (chunk) => {
+      buf = Buffer.concat([buf, chunk]);
+      const r1 = readVarInt(buf, 0); if (!r1) return;
+      if (buf.length - r1.next < r1.value) return;
+      let off = r1.next;
+      const pid = readVarInt(buf, off); if (!pid) return; off = pid.next;
+      const jl = readVarInt(buf, off); if (!jl) return; off = jl.next;
+      if (buf.length - off < jl.value) return;
+      try {
+        const o = JSON.parse(buf.slice(off, off + jl.value).toString('utf8'));
+        finish({
+          online: true,
+          players: { online: (o.players && o.players.online) || 0, max: (o.players && o.players.max) || 0 },
+          version: (o.version && o.version.name) || '',
+          motd: chatText(o.description).replace(/§./g, '').trim()
+        });
+      } catch { finish({ online: true }); }
+    });
+  });
+}
+
 function latestCrashReport(gameDir) {
   try {
     const dir = path.join(gameDir, 'crash-reports');
@@ -191,6 +253,7 @@ ipcMain.handle('modpack:info', async () => {
         mods: m.mods.length, modList: m.mods.map((x) => ({ name: x.name, size: x.size || 0 })),
         overrides: m.overrides ? { size: m.overrides.size || 0 } : null,
         server: m.server || null,
+        admins: Array.isArray(m.admins) ? m.admins : [],
         maintenance: m.maintenance && m.maintenance.enabled ? { message: m.maintenance.message || 'Maintenance en cours.' } : null,
         announcement: m.announcement || null,
         changelog: Array.isArray(m.changelog) ? m.changelog : null,
@@ -212,6 +275,20 @@ ipcMain.handle('news:get', async () => {
 
 /* ---------- Ping serveur ---------- */
 ipcMain.handle('server:ping', async (_e, target) => { if (!target || !target.ip) return { online: false }; return pingServer(target.ip, target.port || 25565); });
+ipcMain.handle('server:status', async (_e, target) => { if (!target || !target.ip) return { online: false }; return slpStatus(target.ip, target.port || 25565); });
+
+/* ---------- Demandes de mods (issues GitHub publiques, lecture seule) ---------- */
+ipcMain.handle('issues:list', async () => {
+  try {
+    const url = `https://api.github.com/repos/${config.repo.owner}/${config.repo.repo}/issues?state=open&labels=mod-request&per_page=30`;
+    const res = await fetch(url, { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'craftindustries-launcher' } });
+    if (!res.ok) return { ok: false, error: 'HTTP ' + res.status, items: [] };
+    const data = await res.json();
+    const items = (Array.isArray(data) ? data : []).filter((i) => !i.pull_request)
+      .map((i) => ({ number: i.number, title: i.title, user: i.user ? i.user.login : '?', body: (i.body || '').slice(0, 600), url: i.html_url }));
+    return { ok: true, items };
+  } catch (e) { return { ok: false, error: fmtErr(e), items: [] }; }
+});
 
 /* ---------- Screenshots ---------- */
 ipcMain.handle('screens:list', () => {
