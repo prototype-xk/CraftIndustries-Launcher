@@ -294,6 +294,13 @@
           </div>
 
           <div class="card">
+            <div class="card__row"><div class="card__label" data-i18n="admin_allowed">Mods client autorisés (anti-triche)</div><button id="admin-hash" class="btn btn--ghost btn--sm" data-i18n="admin_hash">Calculer le SHA-1 d'un .jar</button></div>
+            <div class="hashbox hidden" id="admin-hash-result"></div>
+            <div class="allowlist" id="admin-allowlist"></div>
+            <div class="muted hidden" id="admin-allowed-empty" data-i18n="admin_allowed_empty">Aucun mod client autorisé. Ajoute-les dans manifest.allowedMods.</div>
+          </div>
+
+          <div class="card">
             <div class="card__label" style="margin-bottom:12px" data-i18n="admin_tools">Outils</div>
             <div class="admin-actions">
               <button class="btn btn--ghost" id="admin-resync" data-i18n="repair_btn">Forcer la resynchro</button>

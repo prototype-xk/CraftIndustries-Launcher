@@ -223,6 +223,22 @@ Le workflow l'injecte dans `secrets.json` au build, sans jamais l'exposer dans l
 > ⚠️ Un webhook embarqué dans une app client reste extractible par les utilisateurs de l'app.
 > Régénère-le s'il fuite. Pour un risque nul, héberge plutôt un relais, ou garde seulement « Copier l'image ».
 
+### Panneau Admin & anti-triche (dans `modpack/manifest.json`)
+- `admins` : liste d'**UUID Minecraft** (sans tirets). Ces comptes voient l'onglet **Admin**
+  (demandes de mods, raccourcis d'édition GitHub, outils, diagnostics + ping détaillé).
+  > Le masquage est un garde-fou côté client ; les actions sensibles passent par **ta** connexion GitHub.
+- `allowedMods` : mods **client autorisés** (optionnels), vérifiés par **SHA-1** :
+  ```json
+  "allowedMods": [ { "name": "journeymap.jar", "sha1": "…" } ]
+  ```
+  Au lancement, le launcher garde les mods obligatoires (`mods`) **+** ces mods autorisés (par hash),
+  et **supprime tout autre `.jar`** (xray, killaura…). Un joueur clique **« Demander un mod client »**
+  → ça ouvre une issue GitHub (`mod-request`) ; l'admin vérifie le mod, récupère son SHA-1 via
+  **Admin → « Calculer le SHA-1 d'un .jar »**, et l'ajoute à `allowedMods`.
+  > ⚠️ Un tricheur déterminé peut contourner n'importe quel launcher : la vraie protection
+  > reste un **anti-triche côté serveur**. L'allowlist est un garde-fou efficace contre le casual.
+- Pour activer les demandes : crée le label **`mod-request`** sur GitHub (Issues → Labels).
+
 ### Succès, temps de jeu, thèmes, sons, tray
 Gérés automatiquement / via les **Paramètres** (thème d'accent, sons & ambiance, RAM détectée).
 Le launcher se **minimise dans la barre des tâches** (clic sur l'icône pour le rouvrir).

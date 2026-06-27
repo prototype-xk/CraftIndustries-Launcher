@@ -1,6 +1,6 @@
 'use strict';
 
-const { app, BrowserWindow, ipcMain, shell, Tray, Menu, Notification, nativeImage, clipboard } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, Tray, Menu, Notification, nativeImage, clipboard, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -13,6 +13,7 @@ const discord = require('./discord');
 const achievements = require('./achievements');
 const { fetchManifest, syncMods, syncOverrides, repairPack } = require('./modpack');
 const { launchGame } = require('./launcher');
+const { sha1File } = require('./util');
 
 const isDev = process.argv.includes('--dev');
 const isSelftest = process.argv.includes('--selftest');
@@ -254,6 +255,7 @@ ipcMain.handle('modpack:info', async () => {
         overrides: m.overrides ? { size: m.overrides.size || 0 } : null,
         server: m.server || null,
         admins: Array.isArray(m.admins) ? m.admins : [],
+        allowedList: Array.isArray(m.allowedMods) ? m.allowedMods.map((x) => ({ name: x.name || '', sha1: x.sha1 || '' })) : [],
         maintenance: m.maintenance && m.maintenance.enabled ? { message: m.maintenance.message || 'Maintenance en cours.' } : null,
         announcement: m.announcement || null,
         changelog: Array.isArray(m.changelog) ? m.changelog : null,
@@ -288,6 +290,20 @@ ipcMain.handle('issues:list', async () => {
       .map((i) => ({ number: i.number, title: i.title, user: i.user ? i.user.login : '?', body: (i.body || '').slice(0, 600), url: i.html_url }));
     return { ok: true, items };
   } catch (e) { return { ok: false, error: fmtErr(e), items: [] }; }
+});
+
+/* ---------- Outil admin : SHA-1 d'un .jar (pour remplir allowedMods) ---------- */
+ipcMain.handle('tools:hashFile', async () => {
+  try {
+    const res = await dialog.showOpenDialog(win, {
+      title: 'Choisir un mod (.jar) à autoriser',
+      filters: [{ name: 'Mods', extensions: ['jar'] }],
+      properties: ['openFile']
+    });
+    if (res.canceled || !res.filePaths || !res.filePaths.length) return { ok: false };
+    const file = res.filePaths[0];
+    return { ok: true, name: path.basename(file), sha1: await sha1File(file) };
+  } catch (e) { return { ok: false, error: fmtErr(e) }; }
 });
 
 /* ---------- Screenshots ---------- */

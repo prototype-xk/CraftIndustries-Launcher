@@ -47,11 +47,18 @@ async function syncMods(manifest, { onStatus, onProgress } = {}) {
   fs.mkdirSync(modsDir, { recursive: true });
 
   const wanted = new Set(manifest.mods.map((m) => m.name));
+  const allowedSha = new Set((manifest.allowedMods || []).map((m) => String(m.sha1 || '').toLowerCase()).filter(Boolean));
 
-  // Nettoyage des mods obsolètes (miroir exact du serveur).
+  // Anti-triche : on garde les mods obligatoires + les mods client AUTORISÉS (par SHA-1),
+  // et on supprime tout autre .jar (xray, killaura, etc.).
   for (const file of fs.readdirSync(modsDir)) {
-    if (file.endsWith('.jar') && !wanted.has(file)) {
-      if (onStatus) onStatus(`Suppression : ${file}`);
+    if (!file.endsWith('.jar') || wanted.has(file)) continue;
+    let allowed = false;
+    if (allowedSha.size) {
+      try { allowed = allowedSha.has((await sha1File(path.join(modsDir, file))).toLowerCase()); } catch { allowed = false; }
+    }
+    if (!allowed) {
+      if (onStatus) onStatus(`Mod non autorisé supprimé : ${file}`);
       fs.rmSync(path.join(modsDir, file), { force: true });
     }
   }

@@ -101,7 +101,7 @@ if (overrides) manifest.overrides = overrides;
 // Préserve les champs édités à la main (non auto-générés) du manifeste existant.
 try {
   const prev = JSON.parse(fs.readFileSync(path.join(root, 'modpack', 'manifest.json'), 'utf8'));
-  for (const k of ['changelog', 'maintenance', 'announcement', 'admins']) {
+  for (const k of ['changelog', 'maintenance', 'announcement', 'admins', 'allowedMods']) {
     if (prev[k] !== undefined) manifest[k] = prev[k];
   }
 } catch { /* pas de manifeste précédent */ }

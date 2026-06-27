@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld('api', {
   pingServer: (ip, port) => ipcRenderer.invoke('server:ping', { ip, port }),
   serverStatus: (ip, port) => ipcRenderer.invoke('server:status', { ip, port }),
   getIssues: () => ipcRenderer.invoke('issues:list'),
+  hashFile: () => ipcRenderer.invoke('tools:hashFile'),
   repairPack: () => ipcRenderer.invoke('pack:repair'),
   play: () => ipcRenderer.invoke('game:play'),
 

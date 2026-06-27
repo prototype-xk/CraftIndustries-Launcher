@@ -34,6 +34,7 @@ const el = {
   adminEditNews: $('admin-edit-news'), adminEditManifest: $('admin-edit-manifest'), adminOpenIssues: $('admin-open-issues'),
   adminResync: $('admin-resync'), adminOpenMods: $('admin-open-mods'), adminOpenConfig: $('admin-open-config'), adminOpenCrash: $('admin-open-crash'), adminOpenGame: $('admin-open-game'),
   adminDiag: $('admin-diag'), adminDiagRefresh: $('admin-diag-refresh'),
+  adminHash: $('admin-hash'), adminHashResult: $('admin-hash-result'), adminAllowlist: $('admin-allowlist'), adminAllowedEmpty: $('admin-allowed-empty'),
   onboard: $('onboard'), obTitle: $('ob-title'), obText: $('ob-text'), obDots: $('ob-dots'), obSkip: $('ob-skip'), obNext: $('ob-next')
 };
 
@@ -55,7 +56,7 @@ const I18N = {
     ach_title: '🏆 Succès', cl_title: '✨ Quoi de neuf', ach_unlocked: 'Succès débloqué', share: 'Partager Discord',
     ready: 'Prêt.', connect_to_play: 'Connecte-toi pour jouer.', connecting: 'Connexion à Microsoft…', auto_connect: 'Connexion automatique…', disconnected: 'Déconnecté.', welcome: 'Bienvenue', login_fail: 'Échec de la connexion : ', init: 'Initialisation…', error: 'Erreur : ', repaired: 'Installation réinitialisée — tout sera re-synchronisé au prochain lancement.',
     ob_skip: 'Passer', ob_next: 'Suivant', ob_start: 'Commencer',
-    nav_admin: 'Admin', admin_title: 'Administration', admin_sub: 'Réservé aux administrateurs', admin_requests: 'Demandes de mods', admin_req_empty: 'Aucune demande en attente.', admin_content: 'Contenu (édition sur GitHub)', admin_edit_news: 'Éditer les actualités', admin_edit_manifest: 'Maintenance / annonce / mods', admin_open_issues: 'Toutes les demandes (GitHub)', admin_tools: 'Outils', admin_open_game: 'Dossier de jeu', admin_diag: 'Diagnostics', request_mod: 'Demander un mod', req_handle: 'Traiter sur GitHub', diag_players: 'Joueurs en ligne', diag_motd: 'MOTD', diag_mcver: 'Version serveur', diag_ram: 'RAM système', diag_gamedir: 'Dossier de jeu', diag_appver: 'Version launcher', diag_status: 'Statut serveur',
+    nav_admin: 'Admin', admin_title: 'Administration', admin_sub: 'Réservé aux administrateurs', admin_requests: 'Demandes de mods', admin_req_empty: 'Aucune demande en attente.', admin_content: 'Contenu (édition sur GitHub)', admin_edit_news: 'Éditer les actualités', admin_edit_manifest: 'Maintenance / annonce / mods', admin_open_issues: 'Toutes les demandes (GitHub)', admin_tools: 'Outils', admin_open_game: 'Dossier de jeu', admin_diag: 'Diagnostics', request_mod: 'Demander un mod client', req_handle: 'Traiter sur GitHub', admin_allowed: 'Mods client autorisés (anti-triche)', admin_hash: "Calculer le SHA-1 d'un .jar", admin_allowed_empty: 'Aucun mod client autorisé. Ajoute-les dans manifest.allowedMods.', hash_copy: "Copier l'entrée", diag_players: 'Joueurs en ligne', diag_motd: 'MOTD', diag_mcver: 'Version serveur', diag_ram: 'RAM système', diag_gamedir: 'Dossier de jeu', diag_appver: 'Version launcher', diag_status: 'Statut serveur',
     ob_t1: 'Bienvenue sur CraftIndustries', ob_x1: 'Connecte-toi avec ton compte Microsoft (bouton en bas à gauche) pour jouer.',
     ob_t2: 'Règle ta mémoire', ob_x2: 'Dans Paramètres, ajuste la RAM (4–6 Go conseillé) et choisis ton thème.',
     ob_t3: 'Prêt à jouer', ob_x3: 'Clique sur JOUER : le launcher installe Minecraft, Forge, les mods et les configs automatiquement. Bon jeu !'
@@ -76,7 +77,7 @@ const I18N = {
     ach_title: '🏆 Achievements', cl_title: "✨ What's new", ach_unlocked: 'Achievement unlocked', share: 'Share to Discord',
     ready: 'Ready.', connect_to_play: 'Sign in to play.', connecting: 'Connecting to Microsoft…', auto_connect: 'Auto sign-in…', disconnected: 'Signed out.', welcome: 'Welcome', login_fail: 'Sign-in failed: ', init: 'Initializing…', error: 'Error: ', repaired: 'Installation reset — everything will re-sync next launch.',
     ob_skip: 'Skip', ob_next: 'Next', ob_start: 'Get started',
-    nav_admin: 'Admin', admin_title: 'Administration', admin_sub: 'Admins only', admin_requests: 'Mod requests', admin_req_empty: 'No pending requests.', admin_content: 'Content (edit on GitHub)', admin_edit_news: 'Edit news', admin_edit_manifest: 'Maintenance / announcement / mods', admin_open_issues: 'All requests (GitHub)', admin_tools: 'Tools', admin_open_game: 'Game folder', admin_diag: 'Diagnostics', request_mod: 'Request a mod', req_handle: 'Handle on GitHub', diag_players: 'Players online', diag_motd: 'MOTD', diag_mcver: 'Server version', diag_ram: 'System RAM', diag_gamedir: 'Game folder', diag_appver: 'Launcher version', diag_status: 'Server status',
+    nav_admin: 'Admin', admin_title: 'Administration', admin_sub: 'Admins only', admin_requests: 'Mod requests', admin_req_empty: 'No pending requests.', admin_content: 'Content (edit on GitHub)', admin_edit_news: 'Edit news', admin_edit_manifest: 'Maintenance / announcement / mods', admin_open_issues: 'All requests (GitHub)', admin_tools: 'Tools', admin_open_game: 'Game folder', admin_diag: 'Diagnostics', request_mod: 'Request a client mod', req_handle: 'Handle on GitHub', admin_allowed: 'Authorized client mods (anti-cheat)', admin_hash: 'Compute a .jar SHA-1', admin_allowed_empty: 'No authorized client mod. Add them in manifest.allowedMods.', hash_copy: 'Copy entry', diag_players: 'Players online', diag_motd: 'MOTD', diag_mcver: 'Server version', diag_ram: 'System RAM', diag_gamedir: 'Game folder', diag_appver: 'Launcher version', diag_status: 'Server status',
     ob_t1: 'Welcome to CraftIndustries', ob_x1: 'Sign in with your Microsoft account (button at the bottom left) to play.',
     ob_t2: 'Set your memory', ob_x2: 'In Settings, adjust the RAM (4–6 GB recommended) and pick your theme.',
     ob_t3: 'Ready to play', ob_x3: 'Click PLAY: the launcher installs Minecraft, Forge, mods and configs automatically. Have fun!'
@@ -169,7 +170,7 @@ function showView(view) {
   document.querySelectorAll('.view').forEach((v) => v.classList.toggle('view--active', v.id === 'view-' + view));
   if (view === 'news') loadNews();
   if (view === 'screens') loadScreens();
-  if (view === 'admin') { loadRequests(); loadDiag(); }
+  if (view === 'admin') { loadRequests(); loadDiag(); renderAllowlist(); }
 }
 document.querySelectorAll('.nav__item').forEach((item) => item.addEventListener('click', () => { sound.click(); showView(item.dataset.view); }));
 
@@ -334,6 +335,29 @@ async function loadDiag() {
 }
 el.adminReqRefresh.addEventListener('click', () => { sound.click(); loadRequests(); });
 el.adminDiagRefresh.addEventListener('click', () => { sound.click(); loadDiag(); });
+function renderAllowlist() {
+  const list = (lastInfo && lastInfo.allowedList) || [];
+  el.adminAllowlist.innerHTML = '';
+  el.adminAllowedEmpty.classList.toggle('hidden', list.length > 0);
+  for (const m of list) {
+    const d = document.createElement('div'); d.className = 'allowmod';
+    d.innerHTML = '<div class="allowmod__name"></div><div class="allowmod__sha"></div>';
+    d.querySelector('.allowmod__name').textContent = m.name || '(sans nom)';
+    d.querySelector('.allowmod__sha').textContent = 'SHA-1 ' + (m.sha1 || '');
+    el.adminAllowlist.appendChild(d);
+  }
+}
+el.adminHash.addEventListener('click', async () => {
+  sound.click();
+  const r = await api.hashFile();
+  if (!r || !r.ok) return;
+  const entry = JSON.stringify({ name: r.name, sha1: r.sha1 });
+  el.adminHashResult.classList.remove('hidden');
+  el.adminHashResult.innerHTML = '<span class="hashbox__val"></span><button class="btn btn--sm btn--primary"></button>';
+  el.adminHashResult.querySelector('.hashbox__val').textContent = `${r.name} → ${r.sha1}`;
+  const b = el.adminHashResult.querySelector('button'); b.textContent = t('hash_copy');
+  b.addEventListener('click', async () => { try { await navigator.clipboard.writeText(entry); b.textContent = '✓'; setTimeout(() => { b.textContent = t('hash_copy'); }, 1500); } catch { /* */ } });
+});
 el.adminEditNews.addEventListener('click', () => { if (repoUrl) api.openExternal(`${repoUrl}/edit/${branch}/news.json`); });
 el.adminEditManifest.addEventListener('click', () => { if (repoUrl) api.openExternal(`${repoUrl}/edit/${branch}/modpack/manifest.json`); });
 el.adminOpenIssues.addEventListener('click', () => { if (repoUrl) api.openExternal(`${repoUrl}/issues?q=is%3Aissue+is%3Aopen+label%3Amod-request`); });
@@ -344,8 +368,8 @@ el.adminOpenCrash.addEventListener('click', () => { if (gameDir) api.openPath(ga
 el.adminOpenGame.addEventListener('click', () => api.openGameDir());
 el.btnRequestMod.addEventListener('click', () => {
   sound.click(); if (!repoUrl) return;
-  const title = encodeURIComponent('Demande de mod : ');
-  const body = encodeURIComponent('**Nom du mod :**\n\n**Lien (Modrinth / CurseForge) :**\n\n**Pourquoi ce mod :**\n');
+  const title = encodeURIComponent('Autorisation mod client : ');
+  const body = encodeURIComponent("**Nom du mod (client) :**\n\n**Lien (Modrinth / CurseForge) :**\n\n**Type :** (minimap, shaders, perf...)\n\n_Demande d'autorisation d'un mod côté client — soumis à validation anti-triche._\n");
   api.openExternal(`${repoUrl}/issues/new?labels=mod-request&title=${title}&body=${body}`);
 });
 
